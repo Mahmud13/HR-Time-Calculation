@@ -1,0 +1,6 @@
+<?php
+include 'db.inc.php';
+$sql = 'SELECT DISTINCT `des` FROM rawnametable';
+$result = mysqli_query($link, $sql);
+
+?>

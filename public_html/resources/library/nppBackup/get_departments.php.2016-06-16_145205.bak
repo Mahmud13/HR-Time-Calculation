@@ -1,0 +1,16 @@
+<?php
+include 'db.inc.php';
+$sql = 'SELECTT DISTINCT `des` FROM rawnametable';
+$result = mysqli_query($link, $sql);
+
+if(!$result){
+	$error = 'Error fetching list of departments.';
+	include 'error.html.php';
+}else
+{
+	while ($row = mysqli_fetch_array($result))
+	{
+	$departments [] = $row['des'];
+	}
+}
+?>

@@ -1,0 +1,7 @@
+	<section>
+	 <?php foreach ($departments as $dept): ?>
+		<p>
+			<?php echo $dept; ?>
+		</p>
+	 <?php endforeach; ?>
+	</section>
