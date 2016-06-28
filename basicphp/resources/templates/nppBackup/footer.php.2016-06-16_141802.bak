@@ -1,7 +1,0 @@
-<?php require_once("/opt/lampp/htdocs/hrm/resources/config.php"); ?>
- 
-<footer>
-Copyright © mahmud
-</footer>
-</body>
-</html>
