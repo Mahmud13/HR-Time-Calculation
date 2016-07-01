@@ -31,42 +31,53 @@
 	if(!$result){
 		exit();
 	}
+	unset($dates);
 	while ($row = mysqli_fetch_array($result)){
 		$dates[] = $row['date'];
 		$today = intval(substr($row['date'],-2));
 		$intime[$today] = $row['inTime'];
 		$outtime[$today] = $row['outTime'];
-		if($intime[$today]!="00:00:00" and $outtime[$today] != "00:00:00"){
+		$status[$today] = $row['status'];
+		if($intime[$today]!="00:00:00" and $outtime[$today] != "00:00:00"){
 			$workhour[$today] = date("g:s", strtotime($outtime[$today])-strtotime($intime[$today]));
 		}
-		if(!is_null($row['status'])){
-			$st = $row['status'];
-		}else  if($intime[$today] == "00:00:00"){
-			$st = 'absent';
-		}else if($outtime[$today]=="00:00:00"){
-			$st = 'nopunchout';
-		}else{
-			$intime_epoch = strtotime($intime[$today]);
-			$outtime_epoch = strtotime($outtime[$today]);
-			$entrytime_epoch = strtotime("09:15:00");
-			$latetime_epoch = strtotime("09:30:00");
-			$leavetime_epoch = strtotime("13:30:00");
-			if($intime_epoch>$latetime_epoch or $outtime_epoch<$leavetime_epoch){
-				$st = "half";
-			}else if($intime_epoch>$entrytime_epoch){
-				$st = "late";
-			}else{
-				$st = "full";
-			}
-			$sql = 'UPDATE RawTimeTable
-					SET `status`="'.$st.'"
-					WHERE `pin`="'.$staffpin.'" AND `date`="'.$row['date'].'"';
-			mysqli_query($link, $sql);
-		}
-		$status[$today] = $st;
+	}
+	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+	$result = mysqli_query($link, $sql);
+	if(!$result){
+		exit();
+	}
+	while ($row = mysqli_fetch_array($result)){
+		$today = intval(substr($row['date'],-2));
+		$flags[$today] = $row['flag'];
 	}
 	for($daycounter = "1";$daycounter<=$endday;$daycounter++){
 		$days[] = $daycounter;
+		$dt = $daycounter<10 ? "$year-$monthid-0$daycounter" : "$year-$monthid-$daycounter";
+		if(!in_array($dt,$dates)){
+			$sql = 'INSERT INTO RawTimeTable
+					SET
+					`status`="holiday",
+					`intime`="00:00:00",
+					`outtime`="00:00:00",
+					`pin`="'.$staffpin.'",
+					`date`="'.$dt.'"';
+			mysqli_query($link, $sql);
+		}
+		$dayNames[$daycounter] = date("l", strtotime("$year-$monthid-$daycounter"));
+		if(empty($flags[$daycounter])){
+			if($dayNames[$daycounter]!='Friday' and $dayNames[$daycounter]!='Saturday'){
+				$flags[$daycounter]='workday';
+			}else{
+				$flags[$daycounter]='holiday';
+			}
+			$sql = 'INSERT INTO calendar
+					SET
+					`epochdate`="'.strtotime($dt).'",
+					`flag`="'.$flags[$daycounter].'",
+					`date`="'.$dt.'"';
+			mysqli_query($link, $sql);
+		}
 		if(!isset($intime[$daycounter])){
 			$intime[$daycounter] = "-";
 		}
@@ -84,15 +95,32 @@
 		}else{		
 			$workhour[$daycounter] = "-";
 		}
-		
+		if(!isset($status[$daycounter]) or is_null($status[$daycounter])){
+			if($intime[$daycounter] == "-" and $flags[$daycounter]!='holiday'){
+				$st = 'absent';
+			}else if($outtime[$daycounter]=="-" and $flags[$daycounter]!='holiday'){
+				$st = 'nopunchout';
+			}else if($flags[$daycounter]=='holiday'){
+				$st = 'holiday';
+			}else{
+				$intime_epoch = strtotime($intime[$daycounter]);
+				$outtime_epoch = strtotime($outtime[$daycounter]);
+				$entrytime_epoch = strtotime("09:15:00");
+				$latetime_epoch = strtotime("09:30:00");
+				$leavetime_epoch = strtotime("13:30:00");
+				if($intime_epoch>$latetime_epoch or $outtime_epoch<$leavetime_epoch){
+					$st = "half";
+				}else if($intime_epoch>$entrytime_epoch){
+					$st = "late";
+				}else{
+					$st = "full";
+				}
+			}
+			$status[$daycounter] = $st;
+			$sql = 'UPDATE RawTimeTable
+					SET `status`="'.$st.'"
+					WHERE `pin`="'.$staffpin.'" AND `date`="'.$dt.'"';
+			mysqli_query($link, $sql);
+		}
 	}
-	$sql = 'SELECT `flag` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
-	$result = mysqli_query($link, $sql);
-	if(!$result){
-		exit();
-	}
-	while ($row = mysqli_fetch_array($result)){
-		$flags[] = $row['flag'];
-	}
-	
- ?>
+?>
