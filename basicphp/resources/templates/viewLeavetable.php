@@ -24,8 +24,8 @@
 		<?php foreach($days as $index=>$day): ?>
 			<tr>
 				<td class="date"><?php echo $day; ?></td>
-				<td class="day"><?php echo date("l", strtotime("$year-$monthid-$day")); ?></td>
-				<td class="stat"><?php if(isset($flags[$index])){echo strtoupper(substr($flags[$index],0,1));}else{echo "-";}?></td>
+				<td class="day"><?php echo $dayNames[$day]; ?></td>
+				<td class="stat"><?php echo strtoupper(substr($flags[$day],0,1));?></td>
 				<td class="intime" id="intime" value="10:55"><?php echo $intime[$day]; ?></td>
 				<td class="outtime" id="outtime" value=<?php echo $intime[$day]; ?>><?php echo $outtime[$day]; ?></td>
 				<td class="workhour"><?php echo  $workhour[$day]; ?></td>
@@ -42,8 +42,8 @@
 	<br><br>
 </article>	
 <script>
-	$(document).ready( function(){
-		var scrollToElement = $("#leaveTable");
-		$(window).scrollTop( scrollToElement.offset().top);
-	});
+$(document).ready( function(){
+	var scrollToElement = $("#leaveTable");
+	$(window).scrollTop( scrollToElement.offset().top);
+});
 </script>
