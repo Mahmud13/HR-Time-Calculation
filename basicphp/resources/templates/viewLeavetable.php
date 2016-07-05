@@ -19,7 +19,7 @@
 			<th>Medical Leave</th>
 			<th>Earned Leave</th>
 			<th>Without Pay</th>
-			<th>Balance Left</th>
+			<th>Earned Leave Balance</th>
 		</tr>
 		<?php foreach($days as $index=>$day): ?>
 			<tr>
@@ -33,7 +33,7 @@
 				<td class="enjoyedleave"><?php echo (float) $enjoyedleave[$day];?></td>
 				<td class="casualleave"><?php echo (float) $casualleave[$day];?></td>
 				<td class="medicalleave"><?php echo (float) $medicalleave[$day];?></td>
-				<td class="leave"></td>
+				<td class="earnedleave"><?php echo (float) $earnedleave[$day];?></td>
 				<td class="leavewithoutpay"><?php echo (float) $leavewithoutpay[$day];?></td>
 				<td class="balanceleft"><?php echo  $balance[$day];?></td>
 			</tr>

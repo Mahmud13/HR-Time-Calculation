@@ -92,6 +92,14 @@ if($monthid != 1){
 	if(empty($absents)){
 		$absents = 0;
 	}
+}else{
+	$earn_leave_balance = 12;
+	$medical_leave_balance = 14;
+	$casual_leave_balance = 21;
+	$leaves_without_pay = 0;
+	$lates = 0;
+	$halves = 0;
+	$absents = 0;
 }
 
 for($daycounter = "1";$daycounter<=$endday;$daycounter++){
@@ -120,7 +128,7 @@ for($daycounter = "1";$daycounter<=$endday;$daycounter++){
 	if($intime[$daycounter]!="-" and $outtime[$daycounter] != "-"){
 		$workhour[$daycounter] = date("G \h i \m", strtotime($outtime[$daycounter])-strtotime($intime[$daycounter]));
 	}else{		
-		$workhour[$daycounter] = "0";
+		$workhour[$daycounter] = "-";
 	}
 
 	if(!isset($medicalleave[$daycounter])){
@@ -230,6 +238,6 @@ for($daycounter = "1";$daycounter<=$endday;$daycounter++){
 		$earnedleave[$daycounter] = 0.058;
 		$earn_leave_balance += 0.058;
 	}
-	$balance[$daycounter]="$earn_leave_balance - $casual_leave_balance - $medical_leave_balance";
+	$balance[$daycounter]="$earn_leave_balance";
 }
 ?>
