@@ -267,6 +267,8 @@ for($day = "1";$day<=$length_of_month;$day++){
 	}
 	$balance[$day]="$earned_leave_balance";
 }
+
+//Store the month-end balances to the month table
 $sql = 'SELECT `pin` FROM RawMonthTable WHERE `pin`="'.$staffpin.'" AND `month`="'.$year.'-'.$monthid.'-00"';
 $result = mysqli_query($link, $sql);
 if(!$result){
@@ -276,19 +278,19 @@ if(!$result){
 }
 $row = mysqli_fetch_array($result);
 if(empty($row)){
-		$sql = 'INSERT INTO RawMonthTable(pin, month, lates, halves, absents, casualLeave, medicalLeave, earnedLeave, leaveswithoutpay)
+	$sql = 'INSERT INTO RawMonthTable(pin, month, lates, halves, absents, casualLeave, medicalLeave, earnedLeave, leaveswithoutpay)
 				VALUES("'.$staffpin.'","'.$year.'-'.$monthid.'-00","'.$lates.'","'.$halves.'","'.$absents.'","'.$casual_leave_balance.'","'.$medical_leave_balance.'","'.$earned_leave_balance.'","'.$leaves_without_pay.'")';
 }else{
-		$sql = "UPDATE RawMonthTable
-				SET pin=$staffpin, month=\"$year-$monthid-00\",
-				lates=$lates, halves=$halves, absents = $absents,
-				casualLeave = $casual_leave_balance, medicalLeave= $medical_leave_balance,
-				earnedLeave = $earned_leave_balance, leaveswithoutpay=$leaves_without_pay";
+	$sql = "UPDATE RawMonthTable
+			SET pin=$staffpin, month=\"$year-$monthid-00\",
+			lates=$lates, halves=$halves, absents = $absents,
+			casualLeave = $casual_leave_balance, medicalLeave= $medical_leave_balance,
+			earnedLeave = $earned_leave_balance, leaveswithoutpay=$leaves_without_pay";
 }
 $result = mysqli_query($link, $sql);
 if(!$result){
-		$error = mysqli_error($link);
-		include 'error.html.php';
+	$error = mysqli_error($link);
+	include 'error.html.php';
 		exit();
 }
 ?>
