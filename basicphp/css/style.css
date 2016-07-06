@@ -83,3 +83,13 @@ li.nav a:hover {
 .hideDefault{
 	display:none;
 }
+.buttonrow{
+	height: 50px;
+}
+.buttonrow td{
+ 	border: 1px solid transparent;
+ 	border-top: 1px solid black;
+}
+.buttonrow td button{
+	font-weight: bold;
+}

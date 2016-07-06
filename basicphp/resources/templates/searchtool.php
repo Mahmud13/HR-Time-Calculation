@@ -55,9 +55,16 @@
 			</select>
 		</div>	
 			<br><br>
+		
+		<input type="hidden" name="autoMan" id="automan" >
 		<button type="submit" value="viewTime"  id="search-submit1" name="action">Show time report</button>
-		<button type="submit" value="viewLeave" id="search-submit2" name="action">Show leave report</button>
+		<button type="submit" value="viewLeave" id="searchsubmit2" name="action">Show leave report</button>
 	</form>
 </section>
 
+<script>
+$("#searchsubmit2").click(function(){
+	$("#automan").val("0");
+});
+</script>
 

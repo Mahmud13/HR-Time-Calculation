@@ -38,14 +38,21 @@
 			<tr id="row<?php echo $day;?>" class="datafield">
 				<td class="date"><?php echo $day; ?></td>
 				<td class="day"><?php echo $dayNames[$day]; ?></td>
-				<td class="stat"><?php echo strtoupper(substr($flags[$day],0,1));?></td>
+				<td class="stat">
+					<?php $flag =  strtoupper(substr($flags[$day],0,1));?>
+					<div class="view"><?php echo $flag;?></div>
+					<div class="edit">
+						<input type="radio" name="fl<?php echo $day;?>" value="W" <?php if ($flag=="W"){echo 'checked="true"';}?>>W
+						<input type="radio" name="fl<?php echo $day;?>" value="H" <?php if ($flag=="H"){echo 'checked="true"';}?>>H
+					</div>
+				</td>
 				<td class="intime" ><?php echo $intime[$day]; ?></td>
 				<td class="outtime"><?php echo $outtime[$day]; ?></td>
 				<td class="workhour"><?php echo  $workhour[$day]; ?></td>
 				<td class="status">
 					<div class="view"><?php echo isset($status[$day]) ? $status[$day] : "-"; ?></div>
 					<div class="edit">
-						<select name="pt<?php echo $day;?>>
+						<select name="pt<?php echo $day;?>">
 							<?php $st = $status[$day]; ?>
 							<option value="absent" <?php if($st=='absent'){echo 'selected="selectd"';}?>>Absent</option>
 							<option value="full" <?php if($st=='full'){echo 'selected="selectd"';}?>>Full</option>
@@ -56,6 +63,8 @@
 							<Option value="!out-late" <?php if($st=='!out-late'){echo 'selected="selectd"';}?>>!out-late</option>
 							<Option value="aholiday" <?php if($st=='aholiday'){echo 'selected="selectd"';}?>>A.Holiday</option>
 							<Option value="pholiday" <?php if($st=='pholiday'){echo 'selected="selectd"';}?>>P.Holiday</option>
+							<Option value="late3" <?php if($st=='late3'){echo 'selected="selectd"';}?>>Late&gt;3</option>
+							<Option value="half12" <?php if($st=='half12'){echo 'selected="selectd"';}?>>Half&gt;12</option>
 						</select>
 					</div>
 				</td>
@@ -96,22 +105,22 @@
 		</tr>
 		<tr class="buttonrow">
 			<td colspan="5"></td>
-			<td><button type="button" id="reset">Reset</button></td>
+			<td>	
+				<button type="submit" value="viewLeave" id="reset" form="search" name="action">Reset</button>
+			</td>
 			<td><button type="button" id="edit">Edit</button></td>
-			<td><button type="submit" id = "update">Update</button></td>
+			<td colspan="2">
+			<td><button type="button" id="update">Update</button></td>
 		</tr>
 	</table>
 	<br><br>
 </article>	
-<article>
-	<h2 id="tmp"></h2>
-</article>
 <script>
 $(document).ready( function(){
 		var scrollToElement = $("#leaveTable");
 		$(window).scrollTop( scrollToElement.offset().top);
-		$("#update").attr("disabled",true);
-		$("#reset").attr("disabled",true);
+//		$("#update").attr("disabled",true);
+		//$("#reset").attr("disabled",true);
 		$(".edit").hide();
 });
 $("#edit").click(function(){
@@ -122,6 +131,8 @@ $("#edit").click(function(){
 		$("#reset").removeAttr("disabled");
 });
 $("#update").click(function(){
+	var flags = [];
+	var presentType = [];
 	var medicalVal = [];
 	var casualVal = [];
 	var month = $("#month").html(); 
@@ -129,21 +140,23 @@ $("#update").click(function(){
 	var pin = parseInt(pin.substring(pin.length-8,pin.length));
 	$(".datafield").each(function(){
 			var day = parseInt($(this).attr("id").substring(3,5));
+			flags[day] = $(this).find("input[name='fl"+day+"']:checked").val();
+			presentType[day] = $(this).find("select[name='pt"+day+"'] option:selected").val();
 			medicalVal[day] = $(this).find("input[name='ml"+day+"']:checked").val();
 			casualVal[day] = $(this).find("input[name='cl"+day+"']:checked").val();
 	});
 	$.ajax({
 			url: 'resources/library/editLeaveTable.php',
 			type: 'POST',
-			data: {medicalleave: medicalVal, casualleave: casualVal, pin: pin, month: month},
+			data: {flag: flags, status: presentType, medicalleave: medicalVal, casualleave: casualVal, pin: pin, month: month},
 			success: function(data){
+				$("#tmp").html(data);
 			}
 	});	  
-	$("#update").attr("disabled", true);
-	$("#edit").removeAttr("disabled");
 	location.reload();
 });
 $("#reset").click(function(){
-		location.reload();
+	$("#automan").val("1");
+	$("#update").removeAttr("disabled");
 });
 </script>

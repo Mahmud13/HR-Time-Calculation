@@ -5,7 +5,12 @@ $departmentid = html($_POST['departmentid']);
 $staffpin = html($_POST['staffpin']);
 $year = html($_POST['year']);
 $month = html($_POST['month']);
-
+if(isset($_POST['autoMan']) and $_POST['autoMan']=="1"){
+	$automan =  "1";
+	unset($_POST['autoMan']);
+}else{
+	$automan = "0";
+}
 //Get the name of the department
 $sql = "SELECT `name` FROM departments WHERE `id`=$departmentid";
 $result = mysqli_query($link, $sql);
@@ -216,7 +221,11 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$present = 'full';
 		}
 	}
-	$status[$day] = $present;
+	if(is_null($status[$day]) or $automan=="1"){
+		$status[$day] = $present;
+	}else{
+		$present= $status[$day];
+	}
 	$enjoyedleave[$day] = 0;
 	if(in_array($present, array('absent', 'half12', 'late3'))){
 		if($medicalleave[$day]!=0 and $medical_leave_balance){
@@ -265,9 +274,11 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$earnedleave[$day] = 0.058;
 		$earned_leave_balance += 0.058;
 	}
+	if($earned_leave_balance>=60){
+			$earned_leave_balance=60;
+	}
 	$balance[$day]="$earned_leave_balance";
 }
-
 //Store the month-end balances to the month table
 $sql = 'SELECT `pin` FROM RawMonthTable WHERE `pin`="'.$staffpin.'" AND `month`="'.$year.'-'.$monthid.'-00"';
 $result = mysqli_query($link, $sql);
@@ -281,15 +292,17 @@ if(empty($row)){
 	$sql = 'INSERT INTO RawMonthTable(pin, month, lates, halves, absents, casualLeave, medicalLeave, earnedLeave, leaveswithoutpay)
 				VALUES("'.$staffpin.'","'.$year.'-'.$monthid.'-00","'.$lates.'","'.$halves.'","'.$absents.'","'.$casual_leave_balance.'","'.$medical_leave_balance.'","'.$earned_leave_balance.'","'.$leaves_without_pay.'")';
 }else{
+	$mn = "$year-$monthid-00";
 	$sql = "UPDATE RawMonthTable
-			SET pin=$staffpin, month=\"$year-$monthid-00\",
+			SET 
 			lates=$lates, halves=$halves, absents = $absents,
 			casualLeave = $casual_leave_balance, medicalLeave= $medical_leave_balance,
-			earnedLeave = $earned_leave_balance, leaveswithoutpay=$leaves_without_pay";
+			earnedLeave = $earned_leave_balance, leaveswithoutpay=$leaves_without_pay
+			WHERE pin=$staffpin AND month=$mn";
 }
 $result = mysqli_query($link, $sql);
 if(!$result){
-	$error = mysqli_error($link);
+	$error ="cannot store value. ". mysqli_error($link);
 	include 'error.html.php';
 		exit();
 }
