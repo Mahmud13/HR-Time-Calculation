@@ -1,27 +1,34 @@
-	if(!isset($status[$daycounter]) or is_null($status[$daycounter])){
-		if($intime[$daycounter] == "-" and $flags[$daycounter]!='holiday'){
-			$st = 'absent';
-		}else if($outtime[$daycounter]=="-" and $flags[$daycounter]!='holiday'){
-			$st = 'nopunchout';
-		}else if($flags[$daycounter]=='holiday'){
-			$st = 'holiday';
-		}else{
-			$intime_epoch = strtotime($intime[$daycounter]);
-			$outtime_epoch = strtotime($outtime[$daycounter]);
-			$entrytime_epoch = strtotime("09:15:00");
-			$latetime_epoch = strtotime("09:30:00");
-			$leavetime_epoch = strtotime("13:30:00");
-			if($intime_epoch>$latetime_epoch or $outtime_epoch<$leavetime_epoch){
-				$st = "half";
-			}else if($intime_epoch>$entrytime_epoch){
-				$st = "late";
-			}else{
-				$st = "full";
-			}
-		}
-		$status[$daycounter] = $st;	
-		$sql = 'UPDATE RawTimeTable
-			SET `status`="'.$st.'"
-			WHERE `pin`="'.$staffpin.'" AND `date`="'.$dt.'"';
-		mysqli_query($link, $sql);
-	}
+<?php
+include "../config.php";
+include 'db.inc.php';
+if(!isset($_POST['medicalleave']) or !isset($_POST['month']) or !isset($_POST['pin'])){
+	echo 'error';
+	exit();	
+}
+$medicalleave = $_POST['medicalleave'];
+$casualleave = $_POST['casualleave'];
+$len = count($medicalleave)-1;
+$month = explode(' ', $_POST['month'] );
+$year = $month[1];
+$month = $month[0];
+$monthid = date("m", strtotime("2015-$month-01"));
+$pin = $_POST['pin'];
+$startdate = "$year-$monthid-01";
+$enddate = "$year-$monthid-$len";
+$sql1 = 'UPDATE RawTimeTable SET `medicalleave` = CASE date ';
+$sql2 = 'UPDATE RawTimeTable SET `casualleave` = CASE date ';
+for($i=1; $i<=$len; $i++){
+	$ml = $medicalleave[$i];
+	$cl = $casualleave[$i];
+	$dt = $i<10 ? "$year-$monthid-0$i" : "$year-$monthid-$i";
+	$sql1.= 'WHEN "'. $dt. '" THEN "'. $ml. '" ';
+	$sql2.= 'WHEN "'. $dt. '" THEN "'. $cl. '" ';
+}
+$sql1.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
+$sql2.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
+$result1 = mysqli_query($link, $sql1);
+$result2 = mysqli_query($link, $sql2);
+if(!$result1 or !$result2){
+		echo  mysqli_error($link);
+}
+?>

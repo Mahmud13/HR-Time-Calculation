@@ -102,7 +102,7 @@ if($monthid != 1){
 	}
 }else{
 	//If the month is January get the earned leave balance from December of the previous year
-	$prevyear = --$year;
+	$prevyear = $year-1;
 	$sql = "SELECT `earnedleavebalance` FROM RawYearTable WHERE pin=$staffpin AND YEAR(`year`)=$prevyear";
 	$result = mysqli_query($link, $sql);
 	if(!$result){
