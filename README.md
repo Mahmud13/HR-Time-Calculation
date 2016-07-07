@@ -1,31 +1,33 @@
-## Synopsis
+## System requirement
 
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+PHP version > 5.3. There was a bug in the date() function which could not correctly calculate the length of month in the previous versions of PHP 
 
-## Code Example
+## Downloading and copying
 
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+Download the hrm.zip from google drive or github, extract the zip folder to the root directory of localhost(htdocs or www), so that the folder 'hrm' is placed in the root directory.
 
-## Motivation
+## Database setup
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+Go to 'import' tab of 'phpmyadmin' and import 'database.sql' from  the directory of 'hrm/basicphp/resources/sqlcode/'. If you click the 'GO' button,  a database will be created with a user and some tables. The tables will then be loaded with dump data of all months of 2015. 
+If you just want to create the structure of the database and use some other data file, you can upload the file named 'structure.sql' from the same directory.
 
-## Installation
+## Opening the site  
 
-Provide code examples and explanations of how to get the project.
+Go to 'http://localhost/hrm/basicphp/' using the address bar of your browser. If the folder is placed in the right directory, the 'index.php' file should show up. And if the the page can establish a connection to the database successfully, you'll find a search tool on the left side of the screen
 
-## API Reference
+## User guide 
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+If the searchtool appears, you can search for a person using his department and name; or you may just type his pin number in the 'Staff pin' box. If the pin number is valid, the department name and the pin holder's name will show up in their respective boxes. 
 
-## Tests
+Click the button 'Show leave report'. 
 
-Describe and show how to run the tests with code examples.
+Clicking the 'edit' button below the table will make the some columns of the table editable. 
 
-## Contributors
+For the time being, you can switch between holiday and workday, change the present type(e.g. full, half) of a person forcefully, and you can grant medical and casual leave.
 
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
+By default, the present type (e.g. full, half, late) is taken from the database, if available, instead of calculating from 'inTime' and 'outTime'. So, if you make any change to present type, regardless of other data, the present type will remain as you selected.
 
-## License
+But, you can tell the app to calculate the present type from the available data by clicking "Reset" button.
 
-A short snippet describing the license (MIT, Apache, etc.)
+If you want to save any changes you make, click the "Update" button. No changes wil be sent to the server and stored until you press the "Update" button.
+
