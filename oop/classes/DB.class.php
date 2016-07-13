@@ -56,10 +56,13 @@ class DB {
 	//and the values are the data that will be inserted into those columns.
 	//$table is the name of the table and $where is the sql where clause.
 	public function update($data, $table, $where) {
+		$sql = "UPDATE $table SET ";
 		foreach ($data as $column => $value) {
-			$sql = "UPDATE $table SET $column = $value WHERE $where";
-			mysqli_query($this->link, $sql) or die(mysqli_error($this->link));
+			$sql .= "$column = $value, ";
 		}
+		$sql = substr($sql, 0 , -2);
+ 		$sql .= " WHERE $where";
+		mysqli_query($this->link, $sql) or die(mysqli_error($this->link));
 		return true;
 	}
 
@@ -90,4 +93,4 @@ class DB {
 
 }
 
-?>;
+?>
