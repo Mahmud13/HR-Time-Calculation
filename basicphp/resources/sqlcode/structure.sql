@@ -64,6 +64,7 @@ CREATE TABLE `RawNameTable` (
 CREATE TABLE `RawTimeTable` (
   `pin` int(11) NOT NULL,
   `date` date NOT NULL,
+  `flag` varchar(255) DEFAULT NULL,
   `inTime` time NOT NULL,
   `outTime` time DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,

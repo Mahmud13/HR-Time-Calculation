@@ -1,3 +1,10 @@
+<script>
+$(document).ready(function(){
+	$("#staffpin").mousedown(function(){
+		$("#searchnameholder").html("<option>dkk</option>");
+	});
+});	
+</script>
 <section>
 	<form action="" method="post" id="search"> 
 		<div name="department" id="department-list">
