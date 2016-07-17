@@ -62,7 +62,13 @@ while ($row = mysqli_fetch_array($result)){
 }
 
 //Get the status of the day where it's a holiday or workday
-$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+
+// Take the data from the pristine calander when reset button is pressed
+if($automan == 1){
+	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+}else{
+	$sql = 'SELECT `flag`, `date` FROM RawTimeTable WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+}
 $result = mysqli_query($link, $sql);
 if(!$result){
 	exit();
@@ -70,7 +76,6 @@ if(!$result){
 while ($row = mysqli_fetch_array($result)){
 	$today = intval(substr($row['date'],-2));
 	$flags[$today] = $row['flag'];
-
 }
 
 //Get the balance of the previous month if the month is not January
@@ -171,6 +176,9 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$casualleave[$day]='0';
 	}
 	$leavewithoutpay[$day]='0';
+
+
+	// Calculating day status
 	if($intime[$day] == "-" and $flags[$day]!='holiday'){
 		$present = 'absent';
 	}else if($outtime[$day]=="-" and $flags[$day]!='holiday'){
@@ -221,13 +229,15 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$present = 'full';
 		}
 	}
-	if(is_null($status[$day]) or $automan=="1"){
+	// take either auto-determined value or the manually set value
+	if(!isset($status[$day]) or $automan=="1"){
 		$status[$day] = $present;
 	}else{
 		$present= $status[$day];
 	}
+	// Leave calculation
 	$enjoyedleave[$day] = 0;
-	if(in_array($present, array('absent', 'half12', 'late3'))){
+	if(in_array($present, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
 		if($medicalleave[$day]!=0 and $medical_leave_balance){
 			$medical_leave_balance--;
 		}else if($casualleave[$day]!=0 and $casual_leave_balance){
@@ -240,16 +250,12 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$enjoyedleave[$day] = 0.5;
 			$leaves_without_pay+=0.5;
 			$leavewithoutpay[$day]=0.5;
-			if ($present!='late3'){
-				$earnedleave[$day] = -0.029;
-				$earned_leave_balance-=0.029;
-			}
+			$earnedleave[$day] = -0.029;
+			$earned_leave_balance-=0.029;
 		}else if($earned_leave_balance<0.5){
 			$leavewithoutpay[$day]=1;
-			if ($present != 'late3'){
-				$earnedleave[$day] = -0.058;
-				$earned_leave_balance-=0.058;
-			}
+			$earnedleave[$day] = -0.058;
+			$earned_leave_balance-=0.058;
 			$leaves_without_pay++;
 		}
 		$earnedleave[$day]+=0.058;
@@ -293,17 +299,17 @@ if(empty($row)){
 				VALUES("'.$staffpin.'","'.$year.'-'.$monthid.'-00","'.$lates.'","'.$halves.'","'.$absents.'","'.$casual_leave_balance.'","'.$medical_leave_balance.'","'.$earned_leave_balance.'","'.$leaves_without_pay.'")';
 }else{
 	$mn = "$year-$monthid-00";
-	$sql = "UPDATE RawMonthTable
+	$sql = 'UPDATE RawMonthTable
 			SET 
-			lates=$lates, halves=$halves, absents = $absents,
-			casualLeave = $casual_leave_balance, medicalLeave= $medical_leave_balance,
-			earnedLeave = $earned_leave_balance, leaveswithoutpay=$leaves_without_pay
-			WHERE pin=$staffpin AND month=$mn";
+			`lates`="' . $lates . '", `halves`="' . $halves . '", `absents` = "' . $absents . '",
+			`casualLeave` = "' . $casual_leave_balance . '", `medicalLeave`= "' . $medical_leave_balance . '",
+			`earnedLeave` = "' . $earned_leave_balance . '", `leaveswithoutpay`= "' . $leaves_without_pay . '"
+			WHERE `pin`= "' . $staffpin . '" AND `month`="'. $mn . '"';
 }
 $result = mysqli_query($link, $sql);
 if(!$result){
 	$error ="cannot store value. ". mysqli_error($link);
 	include 'error.html.php';
-		exit();
+    exit();
 }
 ?>

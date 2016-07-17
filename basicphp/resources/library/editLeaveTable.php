@@ -20,7 +20,7 @@ $enddate = "$year-$monthid-$len";
 $sql0 = 'UPDATE RawTimeTable SET `status` = CASE date ';
 $sql1 = 'UPDATE RawTimeTable SET `medicalleave` = CASE date ';
 $sql2 = 'UPDATE RawTimeTable SET `casualleave` = CASE date ';
-$sql3 = 'UPDATE calendar SET `flag` = CASE date ';
+$sql3 = 'UPDATE RawTimeTable SET `flag` = CASE date ';
 for($i=1; $i<=$len; $i++){
 	$st = $status[$i];
 	$ml = $medicalleave[$i];
@@ -35,8 +35,7 @@ for($i=1; $i<=$len; $i++){
 $sql0.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql1.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql2.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
-$sql3.= 'END WHERE `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
-echo $sql3. "<br>";
+$sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $result0 = mysqli_query($link, $sql0);
 $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);
@@ -45,3 +44,4 @@ if(!$result0 or !$result1 or !$result2 or !$result3){
 		echo  mysqli_error($link);
 }
 ?>
+
