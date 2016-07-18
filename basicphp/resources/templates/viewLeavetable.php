@@ -3,8 +3,13 @@
 		<caption style="font-size: 1.5em;font-weight:bold;">Leave Report</caption>
 		<caption id="month" style="font-size: 1em;font-weight:bold;"><?php echo $month." ".$year;?></caption>
 		<tr>
-			<td colspan="7" style="text-align:left;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Name: </b> <?php echo $staffname;?><br><b>Designation: </b><?php echo $designation; ?></td>
-			<td id="pin" colspan="6" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Pin: </b><?php echo sprintf("%08d",$staffpin); ?></td>
+			<td colspan="7" style="text-align:left;border-bottom: 1px solid transparent; border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Name: </b> <?php echo $staffname;?>
+			<td id = "pin" colspan="6" style="text-align:right;border-bottom: 1px solid transparent;  border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Pin: </b><?php echo sprintf("%08d",$staffpin); ?></td>
+		</tr>
+		<tr>
+			<td colspan="7" style="text-align:left; border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Designation: </b><?php echo $designation; ?></td>
+			<td  class="view" colspan="6" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Prev: </b><?php echo $prev_earned_leave; ?></td>
+			<td class = "edit" colspan="6" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><input id="balance" type="number" value=<?php echo $prev_earned_leave;?>></td>
 		</tr>
 		<tr>
 			<th>Date</th>
@@ -72,7 +77,7 @@
 				</td>
 				<td class="earnedleave"><?php echo (float) $earnedleave[$day];?></td>
 				<td class="leavewithoutpay"><?php echo (float) $leavewithoutpay[$day];?></td>
-				<td class="balanceleft"><?php echo  $balance[$day];?></td>
+				<td class="balanceleft"><?php echo round($balance[$day], 3);?></td>
 			</tr>
 		<?php endforeach;?>
 		<tr>
@@ -91,7 +96,10 @@
 			<td class="balanceleft"></td>
 		</tr>
 		<tr class="buttonrow">
-			<td colspan="5"></td>
+			<td colspan="3"></td>
+			<td>	
+				<button type="submit" value="viewLeave" id="resetcalendar" form="search" name="action">Reset Calendar</button>
+			</td>
 			<td>	
 				<button type="submit" value="viewLeave" id="reset" form="search" name="action">Reset</button>
 			</td>
@@ -101,6 +109,7 @@
 		</tr>
 	</table>
 	<br><br>
+	<div id="tmp"></div>
 </article>	
 
 <link rel="stylesheet" type="text/css" href="css/viewleave.css" >

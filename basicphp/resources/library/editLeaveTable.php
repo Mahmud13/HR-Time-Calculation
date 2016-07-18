@@ -17,6 +17,7 @@ $monthid = date("m", strtotime("2015-$month-01"));
 $pin = $_POST['pin'];
 $startdate = "$year-$monthid-01";
 $enddate = "$year-$monthid-$len";
+$balance = $_POST['balance'];
 $sql0 = 'UPDATE RawTimeTable SET `status` = CASE date ';
 $sql1 = 'UPDATE RawTimeTable SET `medicalleave` = CASE date ';
 $sql2 = 'UPDATE RawTimeTable SET `casualleave` = CASE date ';
@@ -43,5 +44,15 @@ $result3 = mysqli_query($link, $sql3);
 if(!$result0 or !$result1 or !$result2 or !$result3){
 		echo  mysqli_error($link);
 }
+if($monthid!=1){
+	$prevmonth = $monthid-1;
+	$sql = 'Update RawMonthTable SET earnedLeave= "'. $balance . '" WHERE pin = "' . $pin . '" AND month = "' . $year . '-' . $prevmonth . '-00"';
+	mysqli_query($link, $sql);
+}else{
+	$prevyear = $year-1;
+	$sql = 'Update RawYearTable SET earnedleavebalance= "'. $balance . '" WHERE pin = "' . $pin . '" AND year = "' . $prevyear . '-00-00"';
+	mysqli_query($link, $sql);
+}
+echo $sql;
 ?>
 

@@ -64,6 +64,7 @@ $(document).ready(function(){
 			<br><br>
 		
 		<input type="hidden" name="autoMan" id="automan" >
+		<input type="hidden" name="autoCal" id="autocal" >
 		<button type="submit" value="viewTime"  id="search-submit1" name="action">Show time report</button>
 		<button type="submit" value="viewLeave" id="searchsubmit2" name="action">Show leave report</button>
 	</form>

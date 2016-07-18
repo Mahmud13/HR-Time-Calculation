@@ -11,6 +11,12 @@ if(isset($_POST['autoMan']) and $_POST['autoMan']=="1"){
 }else{
 	$automan = "0";
 }
+if(isset($_POST['autoCal']) and $_POST['autoCal']=="1"){
+	$autocal =  "1";
+	unset($_POST['autoCal']);
+}else{
+	$autocal = "0";
+}
 //Get the name of the department
 $sql = "SELECT `name` FROM departments WHERE `id`=$departmentid";
 $result = mysqli_query($link, $sql);
@@ -64,10 +70,10 @@ while ($row = mysqli_fetch_array($result)){
 //Get the status of the day where it's a holiday or workday
 
 // Take the data from the pristine calander when reset button is pressed
-if($automan == 1){
+if($autocal == 1){
 	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
 }else{
-	$sql = 'SELECT `flag`, `date` FROM RawTimeTable WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+	$sql = 'SELECT `flag`, `date` FROM RawTimeTable WHERE `pin`="'.$staffpin.'" AND `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
 }
 $result = mysqli_query($link, $sql);
 if(!$result){
@@ -131,6 +137,7 @@ if($monthid != 1){
 	$halves = 0;
 	$absents = 0;
 }
+$prev_earned_leave = $earned_leave_balance;
 $lates = 0;
 $leaves_without_pay = '0'; 
 
@@ -237,6 +244,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 	}
 	// Leave calculation
 	$enjoyedleave[$day] = 0;
+	$earnedleave[$day] = 0;
 	if(in_array($present, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
 		if($medicalleave[$day]!=0 and $medical_leave_balance){
 			$medical_leave_balance--;
@@ -280,12 +288,12 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$earnedleave[$day] = 0.058;
 		$earned_leave_balance += 0.058;
 	}
-	if($earned_leave_balance>=60){
-			$earned_leave_balance=60;
-	}
 	$balance[$day]="$earned_leave_balance";
 }
 //Store the month-end balances to the month table
+if($monthid==12 and $earned_leave_balance>60){
+	$earned_leave_balance = 60;
+}
 $sql = 'SELECT `pin` FROM RawMonthTable WHERE `pin`="'.$staffpin.'" AND `month`="'.$year.'-'.$monthid.'-00"';
 $result = mysqli_query($link, $sql);
 if(!$result){
