@@ -96,7 +96,7 @@
 			<td class="balanceleft"></td>
 		</tr>
 		<tr class="buttonrow">
-			<td colspan="3"></td>
+			<td colspan="2"></td>
 			<td>	
 				<button type="submit" value="viewLeave" id="resetcalendar" form="search" name="action">Reset Calendar</button>
 			</td>

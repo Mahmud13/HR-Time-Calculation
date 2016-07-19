@@ -96,7 +96,9 @@ CREATE TABLE `RawYearTable` (
 CREATE TABLE `calendar` (
   `epochdate` int(11) NOT NULL,
   `date` date NOT NULL,
-  `flag` varchar(255) DEFAULT NULL
+  `flag` varchar(255) DEFAULT NULL,
+  `map` date NOT NULL,
+  `note` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
