@@ -1,0 +1,8 @@
+CREATE DATABASE hr_calendar;
+USE hr_calendar;
+CREATE TABLE calendar(
+epochdate INT NOT NULL PRIMARY KEY,
+date DATE NOT NULL,
+flag VARCHAR(255)
+)
+DEFAULT CHARACTER SET utf8;

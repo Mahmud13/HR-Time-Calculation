@@ -7,6 +7,7 @@
 <section>
 	<button id="modifyDept">Add/Modify Department</button>
 	<button id="modifyStaff">Add/Modify Staff</button>
+	<a href="hr_calendar/index.php">Change calendar</a>
 	<form>
 		<div class="hideDefault" id="deptForm">
 			<input type="text">

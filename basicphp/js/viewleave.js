@@ -7,28 +7,28 @@ $(document).ready( function(){
 		$(".datafield").each(function(){
 			var day = parseInt($(this).attr("id").substring(3,5));
 			if ($(this).find(".stat").find(".view").html() == "H"){
-				$(this).css("background-color","gray");
+			//	$(this).css("background-color","gray");
 			}
 			if ($(this).find(".status").find(".view").html() == "absent"){
-				$(this).css("background-color","red");
+				$(this).css("background-color","IndianRed");
 			}
 			if ($(this).find(".status").find(".view").html() == "!out-absent"){
-				$(this).css("background-color","red");
+				$(this).css("background-color","IndianRed");
 			}
 			if ($(this).find(".status").find(".view").html() == "late"){
-				$(this).css("background-color","pink");
+				$(this).css("background-color","LightBlue");
 			}
 			if ($(this).find(".status").find(".view").html() == "late3"){
-				$(this).css("background-color","pink");
+				$(this).css("background-color","LightBlue");
 			}
 			if ($(this).find(".status").find(".view").html() == "half"){
-				$(this).css("background-color","yellow");
+				$(this).css("background-color","LightPink");
 			}
 			if ($(this).find(".status").find(".view").html() == "!out-half"){
-				$(this).css("background-color","yellow");
+				$(this).css("background-color","LightPink");
 			}
 			if ($(this).find(".status").find(".view").html() == "half12"){
-				$(this).css("background-color","yellow");
+				$(this).css("background-color","LightPink");
 			}
 			//presentType[day] = $(this).find("select[name='pt"+day+"'] option:selected").val();
 			//medicalVal[day] = $(this).find("input[name='ml"+day+"']:checked").val();

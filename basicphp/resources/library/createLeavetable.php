@@ -228,7 +228,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 		}else if($intime_epoch>$entrytime_epoch){
 			$present = 'late';	
 			$lates++;
-			if($lates>3){
+			if($lates>=3){
 				$present = 'late3';
 				$lates=0;
 			}
