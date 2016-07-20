@@ -1,7 +1,7 @@
 <?php
 include "../config.php";
 include 'db.inc.php';
-if(!isset($_POST['medicalleave']) or !isset($_POST['month']) or !isset($_POST['pin'])){
+if(!isset($_POST['medicalleave']) or !isset($_POST['month']) or !isset($_POST['pin']) or !isset($_POST['dutyleave'])){
 	echo 'error';
 	exit();	
 }
@@ -9,6 +9,7 @@ $flags = $_POST['flag'];
 $status = $_POST['status'];
 $medicalleave = $_POST['medicalleave'];
 $casualleave = $_POST['casualleave'];
+$dutyleave = $_POST['dutyleave'];
 $len = count($medicalleave)-1;
 $month = explode(' ', $_POST['month'] );
 $year = $month[1];
@@ -34,6 +35,7 @@ for($i=1; $i<=$len; $i++){
 		$ml = 0;
 		$cl = 0;
 		$dl = 0;
+	}
 	if(in_array($st, array('half', '!out-half'))){
 		if($ml==1){
 			$ml = 0.5;
@@ -60,6 +62,36 @@ for($i=1; $i<=$len; $i++){
 			$cl = 0;
 		}
 	}
+	if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
+			if($ml==1){
+					$cl = 0;
+					$dl = 0;
+			}else if($ml == 0.5){
+					$ml = 0;
+					$cl = 0;
+					$dl = 0;
+			}
+			if($cl==1){
+					$ml = 0;
+					$dl = 0;
+			}else if($cl == 0.5){
+					$cl = 0;
+					$ml = 0;
+					$dl = 0;
+			}
+			if($dl==1){
+					$ml = 0;
+					$cl = 0;
+			}else if($dl==0.5){
+					$dl = 0;
+					$ml = 0;
+					$cl = 0;
+			}
+	}else{
+			$dl = 0;
+			$ml = 0;
+			$cl = 0;
+	}
 	$sql0.= 'WHEN "'. $dt. '" THEN "'. $st. '" ';
 	$sql1.= 'WHEN "'. $dt. '" THEN "'. $ml. '" ';
 	$sql2.= 'WHEN "'. $dt. '" THEN "'. $cl. '" ';
@@ -70,7 +102,7 @@ $sql0.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "
 $sql1.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql2.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
-$sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
+$sql4.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $result0 = mysqli_query($link, $sql0);
 $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);
@@ -88,6 +120,5 @@ if($monthid!=1){
 	$sql = 'Update RawYearTable SET earnedleavebalance= "'. $balance . '" WHERE pin = "' . $pin . '" AND year = "' . $prevyear . '-00-00"';
 	mysqli_query($link, $sql);
 }
-echo $sql;
 ?>
 

@@ -139,6 +139,7 @@ if($monthid != 1){
 	$absents = 0;
 }
 $prev_earned_leave = $earned_leave_balance;
+$adjusted_earned_leave_balance = $earned_leave_balance + 1.75;
 $lates = 0;
 $leaves_without_pay = '0'; 
 $total_work_hour = date(strtotime('0'));
@@ -251,6 +252,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
+				$adjusted_earned_leave_balance-=0.5;
 			}else{
 				$leavewithoutpay[$day] = 0.5;
 				$leaves_without_pay+=0.5;
@@ -262,6 +264,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
+				$adjusted_earned_leave_balance-=0.5;
 			}else{
 				$leavewithoutpay[$day] = 0.5;
 				$leaves_without_pay+=0.5;
@@ -271,10 +274,12 @@ for($day = "1";$day<=$length_of_month;$day++){
 		}else  if($earned_leave_balance>=1){
 			$enjoyedleave[$day] = 1;
 			$earned_leave_balance--;
+		    $adjusted_earned_leave_balance--;
 		}else if($dutyleave[$day]==0.5){
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
+				$adjusted_earned_leave_balance-=0.5;
 			}else{
 				$leavewithoutpay[$day] = 0.5;
 				$leaves_without_pay+=0.5;
@@ -283,6 +288,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 		}else  if($earned_leave_balance>=1){
 			$enjoyedleave[$day] = 1;
 			$earned_leave_balance--;
+		    $adjusted_earned_leave_balance--;
 		}else  if($earned_leave_balance<1 and $earned_leave_balance>=0.5){
 			$earned_leave_balance-=0.5;
 			$enjoyedleave[$day] = 0.5;
@@ -290,11 +296,13 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$leavewithoutpay[$day]=0.5;
 			$earnedleave[$day] = -0.029;
 			$earned_leave_balance-=0.029;
+		    $adjusted_earned_leave_balance-=0.529;
 		}else if($earned_leave_balance<0.5){
 			$leavewithoutpay[$day]=1;
 			$earnedleave[$day] = -0.058;
 			$earned_leave_balance-=0.058;
 			$leaves_without_pay++;
+			$adjusted_earned_leave_balance-=0.058;
 		}
 		$earnedleave[$day]+=0.058;
 		$earned_leave_balance+=0.058;
@@ -307,11 +315,13 @@ for($day = "1";$day<=$length_of_month;$day++){
 		}else if($earned_leave_balance>=0.5){
 			$enjoyedleave[$day] = 0.5;
 			$earned_leave_balance-=0.5;
+			$adjusted_earned_leave_balance-=0.5;
 		}else{
 			$leavewithoutpay[$day]=0.5;
 			$leaves_without_pay+=0.5;
 			$earnedleave[$day] = -0.029;
 			$earned_leave_balance -= 0.029;
+			$adjusted_earned_leave_balance-=0.029;
 		}
 		$earnedleave[$day] += 0.058;
 		$earned_leave_balance += 0.058;
@@ -321,6 +331,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 	}
 	$balance[$day]="$earned_leave_balance";
 }
+$earned_leave_balance = $adjusted_earned_leave_balance;
 //Store the month-end balances to the month table
 if($monthid==12 and $earned_leave_balance>60){
 	$earned_leave_balance = 60;

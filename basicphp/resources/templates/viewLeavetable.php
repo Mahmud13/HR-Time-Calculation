@@ -12,6 +12,28 @@
 			<td class = "edit" colspan="7" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><input id="balance" type="number" value=<?php echo $prev_earned_leave;?>></td>
 		</tr>
 		<tr>
+			<th colspan="5" style="border-left: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+			<th>Month</th>
+			<th>Medical Leave</th>
+			<th>Casual Leave</th>
+			<th>Earned Leave</th>
+			<th>Halves</th>
+			<th colspan="4"style="border-right: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+		</tr>
+
+		<tr>
+			<th colspan="5" style="border-left: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+			<td><?php if($monthid == 1){echo 'December '. $prevyear;}else{echo date('F Y', strtotime("$year-$prevmonth-01"));}?></td>
+			<td><?php echo 'no'; ?></td>
+			<td><?php echo 'no'; ?></td> 
+			<td><?php echo 'no'; ?></td> 
+			<td><?php echo 'no'; ?></td> 
+			<th colspan="4" style="border-right: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+		</tr>	
+		<tr>
+			<td colspan="14"></td>
+		</tr>
+		<tr>
 			<th>Date</th>
 			<th>Day</th>
 			<th>Flag</th>
@@ -83,7 +105,7 @@
 					<div class="edit">
 						<input type="radio" name="dl<?php echo $day;?>" value="1" <?php if ($dutyleave[$day]==1){echo 'checked="true"';}?>>1
 						<input type="radio" name="dl<?php echo $day;?>" value="0.5" <?php if ($dutyleave[$day]==0.5){echo 'checked="true"';}?>>0.5
-						<input type="radio" value="0" name="cl<?php echo $day;?>"<?php if ($dutyleave[$day]==0){echo 'checked="true"';}?>>0
+						<input type="radio" value="0" name="dl<?php echo $day;?>"<?php if ($dutyleave[$day]==0){echo 'checked="true"';}?>>0
 					</div>
 				</td>
 
@@ -106,7 +128,7 @@
 			<td class="enjoyedleave"></td>
 			<td class="dutyleave"></td>
 			<td class="leavewithoutpay"><?php echo $leaves_without_pay;?></td>
-			<td class="balanceleft"></td>
+			<td class="balanceleft"><?php echo round($earned_leave_balance,3); ?></td>
 		</tr>
 		<tr class="buttonrow">
 			<td colspan="2"></td>
