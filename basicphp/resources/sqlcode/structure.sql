@@ -72,6 +72,7 @@ CREATE TABLE `RawTimeTable` (
   `casualleave` decimal(11,6) NOT NULL,
   `enjoyedleave` decimal(11,6) NOT NULL,
   `earnedleave` decimal(11,6) NOT NULL,
+  `dutyleave` decimal(11,6) NOT NULL,
   `leavewithoutpay` decimal(11,6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

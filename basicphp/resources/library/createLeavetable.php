@@ -44,7 +44,7 @@ $enddate = "$year-$monthid-$length_of_month";
 
 
 //Get the data for everyday of the month
-$sql = 'SELECT `date` , `inTime` , `outTime` , `status`, `enjoyedleave`, `earnedleave`,
+$sql = 'SELECT `date` , `inTime` , `outTime` , `status`, `enjoyedleave`, `earnedleave`, `dutyleave`,
 	`medicalleave`,`casualleave`,`leavewithoutpay`'. ' FROM RawTimeTable' . ' WHERE `pin` = "'.$staffpin .'"' . ' AND `date` >= STR_TO_DATE( "'.$year.'-'.$monthid.'-01", "%Y-%m-%d" ) ' . ' AND `date` <= STR_TO_DATE( "'.$year.'-'.$monthid.'-'.$length_of_month.'", "%Y-%m-%d" ) ';
 $result = mysqli_query($link, $sql);
 if(!$result){
@@ -62,6 +62,7 @@ while ($row = mysqli_fetch_array($result)){
 	$medicalleave[$today]=$row['medicalleave'];
 	$casualleave[$today]=$row['casualleave'];
 	$leavewithoutpay[$today]=$row['leavewithoutpay'];
+	$dutyleave[$today] = $row['dutyleave'];
 	if($intime[$today]!="00:00:00" and $outtime[$today] != "00:00:00"){
 		$workhour[$today] = date("g:s", strtotime($outtime[$today])-strtotime($intime[$today]));
 	}
@@ -140,10 +141,11 @@ if($monthid != 1){
 $prev_earned_leave = $earned_leave_balance;
 $lates = 0;
 $leaves_without_pay = '0'; 
-
+$total_work_hour = date(strtotime('0'));
 //Evaluate the parameters of each day of the month
 for($day = "1";$day<=$length_of_month;$day++){
 	$days[] = $day;
+	$dutyleave[$day] = '0';
 	$date = $day<10 ? "$year-$monthid-0$day" : "$year-$monthid-$day";
 	$dayNames[$day]=date("l",strtotime($date));
 	//If flag of the day is not available from the pristine calendar, assign default flags
@@ -171,6 +173,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 	//If both inTime and outTime is available, determine the workhour
 	if($intime[$day]!="-" and $outtime[$day] != "-"){
 		$workhour[$day] = date("G \h i \m", strtotime($outtime[$day])-strtotime($intime[$day]));
+		$total_work_hour = date($total_work_hour+strtotime($outtime[$day])-strtotime($intime[$day])); 
 	}else{		
 		$workhour[$day] = "-";
 	}
@@ -237,19 +240,46 @@ for($day = "1";$day<=$length_of_month;$day++){
 		}
 	}
 	// take either auto-determined value or the manually set value
-	if(!isset($status[$day]) or $automan=="1"){
-		$status[$day] = $present;
-	}else{
-		$present= $status[$day];
-	}
+	$status[$day] = $present;
+	
 	// Leave calculation
 	$enjoyedleave[$day] = 0;
 	$earnedleave[$day] = 0;
 	if(in_array($present, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
-		if($medicalleave[$day]!=0 and $medical_leave_balance){
+		if($medicalleave[$day]==0.5 and $medical_leave_balance>=0.5){
+			$medical_leave_balance-=0.5;
+			if($earned_leave_balance>=0.5){
+				$enjoyedleave[$day] = 0.5;
+				$earned_leave_balance-=0.5;
+			}else{
+				$leavewithoutpay[$day] = 0.5;
+				$leaves_without_pay+=0.5;
+			}
+		}else if($medicalleave[$day]==1 and $medical_leave_balance>=1){
 			$medical_leave_balance--;
-		}else if($casualleave[$day]!=0 and $casual_leave_balance){
+		}else if($casualleave[$day]==0.5 and $casual_leave_balance>=0.5){
+			$casual_leave_balance-=0.5;
+			if($earned_leave_balance>=0.5){
+				$enjoyedleave[$day] = 0.5;
+				$earned_leave_balance-=0.5;
+			}else{
+				$leavewithoutpay[$day] = 0.5;
+				$leaves_without_pay+=0.5;
+			}
+		}else if($casualleave[$day]==1 and $casual_leave_balance>=1){
 			$casual_leave_balance--;
+		}else  if($earned_leave_balance>=1){
+			$enjoyedleave[$day] = 1;
+			$earned_leave_balance--;
+		}else if($dutyleave[$day]==0.5){
+			if($earned_leave_balance>=0.5){
+				$enjoyedleave[$day] = 0.5;
+				$earned_leave_balance-=0.5;
+			}else{
+				$leavewithoutpay[$day] = 0.5;
+				$leaves_without_pay+=0.5;
+			}
+		}else if($dutyleave[$day]==1){
 		}else  if($earned_leave_balance>=1){
 			$enjoyedleave[$day] = 1;
 			$earned_leave_balance--;
@@ -269,10 +299,11 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$earnedleave[$day]+=0.058;
 		$earned_leave_balance+=0.058;
 	}else if ($present=='half' or $present=='!out-half'){
-		if($medicalleave[$day]!=0 and $medical_leave_balance>=0.5){
+		if($medicalleave[$day]==0.5 and $medical_leave_balance>=0.5){
 			$medical_leave_balance-=0.5;
-		}else if($casualleave[$day]!=0 and $casual_leave_balance>=0.5){
+		}else if($casualleave[$day]==0.5 and $casual_leave_balance>=0.5){
 			$casual_leave_balance-=0.5;
+		}else if($dutyleave[$day]==0.5){
 		}else if($earned_leave_balance>=0.5){
 			$enjoyedleave[$day] = 0.5;
 			$earned_leave_balance-=0.5;

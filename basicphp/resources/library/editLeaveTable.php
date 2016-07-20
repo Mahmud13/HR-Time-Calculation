@@ -22,25 +22,60 @@ $sql0 = 'UPDATE RawTimeTable SET `status` = CASE date ';
 $sql1 = 'UPDATE RawTimeTable SET `medicalleave` = CASE date ';
 $sql2 = 'UPDATE RawTimeTable SET `casualleave` = CASE date ';
 $sql3 = 'UPDATE RawTimeTable SET `flag` = CASE date ';
+$sql4 = 'UPDATE RawTimeTable SET `dutyleave` = CASE date ';
 for($i=1; $i<=$len; $i++){
 	$st = $status[$i];
 	$ml = $medicalleave[$i];
 	$cl = $casualleave[$i];
 	$fl = $flags[$i]=='W' ? 'workday' : 'holiday';
+	$dl = $dutyleave[$i];
 	$dt = $i<10 ? "$year-$monthid-0$i" : "$year-$monthid-$i";
+	if($st=='H'){
+		$ml = 0;
+		$cl = 0;
+		$dl = 0;
+	if(in_array($st, array('half', '!out-half'))){
+		if($ml==1){
+			$ml = 0.5;
+			$cl = 0;
+			$dl = 0;
+		}else if($ml == 0.5){
+			$cl = 0;
+			$dl = 0;
+		}
+		if($cl==1){
+			$cl = 0.5;
+			$ml = 0;
+			$dl = 0;
+		}else if($cl == 0.5){
+			$ml = 0;
+			$dl = 0;
+		}
+		if($dl==1){
+			$dl = 0.5;
+			$ml = 0;
+			$cl = 0;
+		}else if($dl==0.5){
+			$ml = 0;
+			$cl = 0;
+		}
+	}
 	$sql0.= 'WHEN "'. $dt. '" THEN "'. $st. '" ';
 	$sql1.= 'WHEN "'. $dt. '" THEN "'. $ml. '" ';
 	$sql2.= 'WHEN "'. $dt. '" THEN "'. $cl. '" ';
 	$sql3.= 'WHEN "'. $dt. '" THEN "'. $fl. '" ';
+	$sql4.= 'WHEN "'. $dt. '" THEN "'. $dl. '" ';
 }
 $sql0.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql1.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql2.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
+$sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $result0 = mysqli_query($link, $sql0);
 $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);
 $result3 = mysqli_query($link, $sql3);
+$result4 = mysqli_query($link, $sql4);
 if(!$result0 or !$result1 or !$result2 or !$result3){
 		echo  mysqli_error($link);
 }

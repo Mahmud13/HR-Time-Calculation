@@ -4,12 +4,12 @@
 		<caption id="month" style="font-size: 1em;font-weight:bold;"><?php echo $month." ".$year;?></caption>
 		<tr>
 			<td colspan="7" style="text-align:left;border-bottom: 1px solid transparent; border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Name: </b> <?php echo $staffname;?>
-			<td id = "pin" colspan="6" style="text-align:right;border-bottom: 1px solid transparent;  border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Pin: </b><?php echo sprintf("%08d",$staffpin); ?></td>
+			<td id = "pin" colspan="7" style="text-align:right;border-bottom: 1px solid transparent;  border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Pin: </b><?php echo sprintf("%08d",$staffpin); ?></td>
 		</tr>
 		<tr>
 			<td colspan="7" style="text-align:left; border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Designation: </b><?php echo $designation; ?></td>
-			<td  class="view" colspan="6" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Prev: </b><?php echo $prev_earned_leave; ?></td>
-			<td class = "edit" colspan="6" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><input id="balance" type="number" value=<?php echo $prev_earned_leave;?>></td>
+			<td  class="view" colspan="7" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><b>Prev: </b><?php echo $prev_earned_leave; ?></td>
+			<td class = "edit" colspan="7" style="text-align:right;border-top: 1px solid transparent;border-left: 1px solid transparent;border-right: 1px solid transparent"><input id="balance" type="number" value=<?php echo $prev_earned_leave;?>></td>
 		</tr>
 		<tr>
 			<th>Date</th>
@@ -22,6 +22,7 @@
 			<th>Enjoyed Leave</th>
 			<th>Casual/Sick Leave</th>
 			<th>Medical Leave</th>
+			<th>Duty Leave</th>
 			<th>Earned Leave</th>
 			<th>Without Pay</th>
 			<th>Earned Leave Balance</th>
@@ -44,7 +45,7 @@
 				<td class="status">
 					<div class="view"><?php echo isset($status[$day]) ? $status[$day] : "-"; ?></div>
 					<div class="edit">
-						<select name="pt<?php echo $day;?>">
+					<select name="pt<?php echo $day;?>">
 							<?php $st = $status[$day]; ?>
 							<option value="absent" <?php if($st=='absent'){echo 'selected="selectd"';}?>>Absent</option>
 							<option value="full" <?php if($st=='full'){echo 'selected="selectd"';}?>>Full</option>
@@ -53,28 +54,39 @@
 							<Option value="!out-full" <?php if($st=='!out-full'){echo 'selected="selectd"';}?>>!out-full</option>
 							<Option value="!out-half" <?php if($st=='!out-half'){echo 'selected="selectd"';}?>>!out-half</option>
 							<Option value="!out-late" <?php if($st=='!out-late'){echo 'selected="selectd"';}?>>!out-late</option>
-							<Option value="aholiday" <?php if($st=='aholiday'){echo 'selected="selectd"';}?>>A.Holiday</option>
+							<Option value="aholiday" <?php if($st=='aholiday'){echo 'selected="selectd"';}?>>A.Holiday</option> 
 							<Option value="pholiday" <?php if($st=='pholiday'){echo 'selected="selectd"';}?>>P.Holiday</option>
 							<Option value="late3" <?php if($st=='late3'){echo 'selected="selectd"';}?>>Late&gt;3</option>
 							<Option value="half12" <?php if($st=='half12'){echo 'selected="selectd"';}?>>Half&gt;12</option>
-						</select>
+						</select> 
 					</div>
 				</td>
 				<td class="enjoyedleave"><?php echo (float) $enjoyedleave[$day];?></td>
 				<td class="casualleave">
 					<div class="view"><?php echo (float) $casualleave[$day];?></div>
 					<div class="edit">
-						<input type="radio" name="cl<?php echo $day;?>" value="1" <?php if ($casualleave[$day]==1){echo 'checked="true"';}?>>y
-						<input type="radio" value="0" name="cl<?php echo $day;?>"<?php if ($casualleave[$day]==0){echo 'checked="true"';}?>>n
+						<input type="radio" name="cl<?php echo $day;?>" value="1" <?php if ($casualleave[$day]==1){echo 'checked="true"';}?>>1
+						<input type="radio" name="cl<?php echo $day;?>" value="0.5" <?php if ($casualleave[$day]==0.5){echo 'checked="true"';}?>>0.5
+						<input type="radio" value="0" name="cl<?php echo $day;?>"<?php if ($casualleave[$day]==0){echo 'checked="true"';}?>>0
 					</div>
 				</td>
 				<td class="medicalleave">
 					<div class="view"><?php echo (float) $medicalleave[$day];?></div>
 					<div class="edit">
-						<input type="radio" name="ml<?php echo $day;?>" value="1" <?php if ($medicalleave[$day]==1){echo 'checked="true"';}?>>y
-						<input type="radio" value="0" name="ml<?php echo $day;?>"<?php if ($medicalleave[$day]==0){echo 'checked="true"';}?>>n
+						<input type="radio" name="ml<?php echo $day;?>" value="1" <?php if ($medicalleave[$day]==1){echo 'checked="true"';}?>>1
+						<input type="radio" name="ml<?php echo $day;?>" value="0.5" <?php if ($medicalleave[$day]==0.5){echo 'checked="true"';}?>>0.5
+						<input type="radio" value="0" name="ml<?php echo $day;?>"<?php if ($medicalleave[$day]==0){echo 'checked="true"';}?>>0
 					</div>
 				</td>
+				<td class="dutyleave">
+					<div class="view"><?php echo (float) $dutyleave[$day];?></div>
+					<div class="edit">
+						<input type="radio" name="dl<?php echo $day;?>" value="1" <?php if ($dutyleave[$day]==1){echo 'checked="true"';}?>>1
+						<input type="radio" name="dl<?php echo $day;?>" value="0.5" <?php if ($dutyleave[$day]==0.5){echo 'checked="true"';}?>>0.5
+						<input type="radio" value="0" name="cl<?php echo $day;?>"<?php if ($dutyleave[$day]==0){echo 'checked="true"';}?>>0
+					</div>
+				</td>
+
 				<td class="earnedleave"><?php echo (float) $earnedleave[$day];?></td>
 				<td class="leavewithoutpay"><?php echo (float) $leavewithoutpay[$day];?></td>
 				<td class="balanceleft"><?php echo round($balance[$day], 3);?></td>
@@ -86,12 +98,13 @@
 			<td class="stat"></td>
 			<td class="intime" id="intime" value="10:55"></td>
 			<td class="outtime" id="outtime" value=<?php echo $intime[$day]; ?>></td>
-			<td class="workhour"></td>
+			<td class="workhour"><?php echo floor($total_work_hour/3600).'h '. floor(($total_work_hour % 3600)/60). ' m';?></td>
 			<td class="status"></td>
 			<td class="earnedleave"></td>
 			<td class="casualleave"></td>
 			<td class="medicalleave"></td>
 			<td class="enjoyedleave"></td>
+			<td class="dutyleave"></td>
 			<td class="leavewithoutpay"><?php echo $leaves_without_pay;?></td>
 			<td class="balanceleft"></td>
 		</tr>
