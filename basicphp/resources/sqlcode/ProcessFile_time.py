@@ -52,7 +52,7 @@ outFile = codecs.open(outFilename, "w", "utf_8")
 
 initStr = "DROP TABLE IF EXISTS RawTimeTable;\nCREATE TABLE RawTimeTable (\n\t`pin` INT NOT NULL ,\n\t`date` DATE NOT NULL ,\n\t `inTime` TIME NOT NULL ,\n\t`outTime` TIME);\nINSERT INTO RawTimeTable (pin, date, inTime, outTime)\nVALUES ";
 outFile.write(initStr+os.linesep)
-for line in open("wd.txt"):
+for line in open("June16.txt"):
     line = line.strip()
     setCurrentPin(line)
     doPrint(line, outFile);
