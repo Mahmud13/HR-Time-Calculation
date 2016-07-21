@@ -125,6 +125,5 @@ if($monthid!=1){
 	$sql = 'Update RawYearTable SET earnedleavebalance= "'. $earnedbalance . '" WHERE pin = "' . $pin . '" AND year = "' . $prevyear . '-00-00"';
 	mysqli_query($link, $sql);
 }
-echo $sql1;
 ?>
 

@@ -41,10 +41,9 @@ for($i=1; $i<=$len; $i++){
 		$dl = 0;
 	}
 	if(in_array($st, array('half', '!out-half'))){
-	  	echo "no way";
+	  	echo $ml;
 		if($ml==1){
 			$ml = 0.5;
-			echo $ml;
 			$cl = 0;
 			$dl = 0;
 		}else if($ml == 0.5){
@@ -67,7 +66,6 @@ for($i=1; $i<=$len; $i++){
 			$ml = 0;
 			$cl = 0;
 		}
-		echo $ml;
 	}
 	if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
 		if($ml==1){
