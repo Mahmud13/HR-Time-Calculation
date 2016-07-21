@@ -3,8 +3,7 @@ if(!isset($_GET["year"]) or !isset($_GET["month"])){
 	include "form.html.php";
 	exit();
 }
-include_once $_SERVER['DOCUMENT_ROOT'] . '/hr_calendar/includes/db.inc.php';
-
+include_once $_SERVER['DOCUMENT_ROOT'] . '/hrm/basicphp/hr_calendar/includes/db.inc.php';
 $year = $_GET["year"];
 $month = $_GET["month"];
 
@@ -47,8 +46,9 @@ $ns = isset($_POST["note$day"]) ? $_POST["note$day"] : "";
 			epochdate = "'.strtotime("$year-$month-$day").'",
 			date = "'.$year.'-'.$month.'-'.$day.'",
 			flag = "'.$ds.'",
-			map = "'.$ms.'",
+			map = "'.$ms.'"
 			note = "'.$ns.'"';
+
 	if (!mysqli_query($link, $sql)){
 		$error = 'Error saving: ' . mysqli_error($link);
 		include 'includes/error.html.php';

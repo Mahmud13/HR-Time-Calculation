@@ -10,7 +10,7 @@ $status = $_POST['status'];
 $medicalleave = $_POST['medical'];
 $casualleave = $_POST['casualleave'];
 $dutyleave = $_POST['dutyleave'];
-$len = count($medicalleave)-1;
+$len = count($flags)-1;
 $month = explode(' ', $_POST['month'] );
 $year = $month[1];
 $month = $month[0];
@@ -121,7 +121,6 @@ if($monthid!=1){
 }else{
 	$prevyear = $year-1;
 	$sql = 'Update RawYearTable SET earnedleavebalance= "'. $earnedbalance . '" WHERE pin = "' . $pin . '" AND year = "' . $prevyear . '-00-00"';
-	echo $sql;
 	mysqli_query($link, $sql);
 }
 ?>

@@ -1,6 +1,5 @@
 <?php
-$db = $config['db'];
-$link = mysqli_connect($db['host'], $db['username'], $db['password']);
+$link = mysqli_connect('localhost', 'timedbuser', 'helloyou');
 if (!$link)
 {
 	$error = 'Unable to connect to the database server.';
@@ -15,20 +14,10 @@ if (!mysqli_set_charset($link, 'utf8'))
 	exit();
 }
 
-if (!mysqli_select_db($link, $db['dbname']))
+if (!mysqli_select_db($link, 'timedb'))
 {
-	$error = 'Unable to locate the ' . $db['dbname'] . ' hr database.';
+	$error = 'Unable to locate the calendar database.';
 	include 'error.html.php';
 	exit();
 }
-//$sql = 'SELECT * from RawNameTable';
-//$result = mysqli_query($link, $sql);
-//while ($row = mysqli_fetch_array($result))
-//{
-	//$x = rand(1,6);
-	
-	//$y = $row['pin'];
-	//$sql = "UPDATE RawNameTable SET `department_id`=$x WHERE `pin`=$y";
-	//mysqli_query($link, $sql);
-//}
 ?>

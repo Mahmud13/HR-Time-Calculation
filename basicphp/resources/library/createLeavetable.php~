@@ -84,6 +84,14 @@ while ($row = mysqli_fetch_array($result)){
 	$today = intval(substr($row['date'],-2));
 	$flags[$today] = $row['flag'];
 }
+if(is_null($flags[2])){
+	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+	$result = mysqli_query($link, $sql);
+	while ($row = mysqli_fetch_array($result)){
+		$today = intval(substr($row['date'],-2));
+		$flags[$today] = $row['flag'];
+	}
+}
 
 //Get the balance of the previous month if the month is not January
 if($monthid != 1){
@@ -139,6 +147,9 @@ if($monthid != 1){
 	$absents = 0;
 }
 $prev_earned_leave = $earned_leave_balance;
+$prev_medical_leave = $medical_leave_balance;
+$prev_casual_leave = $casual_leave_balance;
+$prev_halves = $halves;
 $adjusted_earned_leave_balance = $earned_leave_balance + 1.75;
 $lates = 0;
 $leaves_without_pay = '0'; 

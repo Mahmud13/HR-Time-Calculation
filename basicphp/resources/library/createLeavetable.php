@@ -84,6 +84,14 @@ while ($row = mysqli_fetch_array($result)){
 	$today = intval(substr($row['date'],-2));
 	$flags[$today] = $row['flag'];
 }
+if(is_null($flags[2])){
+	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
+	$result = mysqli_query($link, $sql);
+	while ($row = mysqli_fetch_array($result)){
+		$today = intval(substr($row['date'],-2));
+		$flags[$today] = $row['flag'];
+	}
+}
 
 //Get the balance of the previous month if the month is not January
 if($monthid != 1){
