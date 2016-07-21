@@ -93,7 +93,7 @@ $("#update").click(function(){
 	 $.ajax({
 			 url: 'resources/library/editLeaveTable.php',
 			 type: 'POST',
-			 data: {flag: flags, status: presentType, medicalleave: medicalVal, casualleave: casualVal, dutyleave: dutyVal, pin: pin, month: month, casualbalance: casualbalance, medical: medicalbalance, earnedbalance: earnedbalance, halfbalance: halfbalance},
+			 data: {flag: flags, status: presentType, medicalleave: medicalVal, casualleave: casualVal, dutyleave: dutyVal, pin: pin, month: month, casualbalance: casualbalance, mb: medicalbalance, earnedbalance: earnedbalance, halfbalance: halfbalance},
 			 success: function(data){
 				$("#tmp").html(data);
 			 }

@@ -7,7 +7,7 @@ if(!isset($_POST['medicalleave']) or !isset($_POST['month']) or !isset($_POST['p
 }
 $flags = $_POST['flag'];
 $status = $_POST['status'];
-$medicalleave = $_POST['medical'];
+$medicalleave = $_POST['medicalleave'];
 $casualleave = $_POST['casualleave'];
 $dutyleave = $_POST['dutyleave'];
 $len = count($medicalleave)-1;

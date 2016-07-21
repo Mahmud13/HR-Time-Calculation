@@ -139,9 +139,6 @@ if($monthid != 1){
 	$absents = 0;
 }
 $prev_earned_leave = $earned_leave_balance;
-$prev_medical_leave = $medical_leave_balance;
-$prev_casual_leave = $casual_leave_balance;
-$prev_halves = $halves;
 $adjusted_earned_leave_balance = $earned_leave_balance + 1.75;
 $lates = 0;
 $leaves_without_pay = '0'; 
