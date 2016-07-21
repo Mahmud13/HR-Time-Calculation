@@ -5,9 +5,10 @@ if(!isset($_POST['medicalleave']) or !isset($_POST['month']) or !isset($_POST['p
 	echo 'error';
 	exit();	
 }
+
 $flags = $_POST['flag'];
 $status = $_POST['status'];
-$medicalleave = $_POST['medical'];
+$medicalleave = $_POST['medicalleave'];
 $casualleave = $_POST['casualleave'];
 $dutyleave = $_POST['dutyleave'];
 $len = count($flags)-1;
@@ -18,7 +19,7 @@ $monthid = date("m", strtotime("2015-$month-01"));
 $pin = $_POST['pin'];
 $startdate = "$year-$monthid-01";
 $enddate = "$year-$monthid-$len";
-$medicalbalance = $_POST['mb'];
+$medicalbalance = $_POST['medicalbalance'];
 $casualbalance = $_POST['casualbalance'];
 $earnedbalance = $_POST['earnedbalance'];
 $halfbalance = $_POST['halfbalance'];
@@ -40,6 +41,7 @@ for($i=1; $i<=$len; $i++){
 		$dl = 0;
 	}
 	if(in_array($st, array('half', '!out-half'))){
+	  	echo $ml;
 		if($ml==1){
 			$ml = 0.5;
 			$cl = 0;
@@ -66,34 +68,34 @@ for($i=1; $i<=$len; $i++){
 		}
 	}
 	if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
-			if($ml==1){
-					$cl = 0;
-					$dl = 0;
-			}else if($ml == 0.5){
-					$ml = 0;
-					$cl = 0;
-					$dl = 0;
-			}
-			if($cl==1){
-					$ml = 0;
-					$dl = 0;
-			}else if($cl == 0.5){
-					$cl = 0;
-					$ml = 0;
-					$dl = 0;
-			}
-			if($dl==1){
-					$ml = 0;
-					$cl = 0;
-			}else if($dl==0.5){
-					$dl = 0;
-					$ml = 0;
-					$cl = 0;
-			}
-	}else{
+		if($ml==1){
+			$cl = 0;
+			$dl = 0;
+		}else if($ml == 0.5){
+			$ml = 0;
+			$cl = 0;
+			$dl = 0;
+		}
+		if($cl==1){
+			$ml = 0;
+			$dl = 0;
+		}else if($cl == 0.5){
+			$cl = 0;
+			$ml = 0;
+			$dl = 0;
+		}
+		if($dl==1){
+			$ml = 0;
+			$cl = 0;
+		}else if($dl==0.5){
 			$dl = 0;
 			$ml = 0;
 			$cl = 0;
+		}
+	}else{
+		$dl = 0;
+		$ml = 0;
+		$cl = 0;
 	}
 	$sql0.= 'WHEN "'. $dt. '" THEN "'. $st. '" ';
 	$sql1.= 'WHEN "'. $dt. '" THEN "'. $ml. '" ';
@@ -112,7 +114,7 @@ $result2 = mysqli_query($link, $sql2);
 $result3 = mysqli_query($link, $sql3);
 $result4 = mysqli_query($link, $sql4);
 if(!$result0 or !$result1 or !$result2 or !$result3){
-		echo  mysqli_error($link);
+	echo  mysqli_error($link);
 }
 if($monthid!=1){
 	$prevmonth = $monthid-1;
@@ -123,5 +125,6 @@ if($monthid!=1){
 	$sql = 'Update RawYearTable SET earnedleavebalance= "'. $earnedbalance . '" WHERE pin = "' . $pin . '" AND year = "' . $prevyear . '-00-00"';
 	mysqli_query($link, $sql);
 }
+echo $sql1;
 ?>
 

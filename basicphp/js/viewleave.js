@@ -78,7 +78,7 @@ $("#update").click(function(){
 	 var month = $("#month").html(); 
 	 var pin = $("#pin").html(); 
 	 pin = parseInt(pin.substring(pin.length-8,pin.length));
-	 var medicalbalance=$("#medicabalance").val();
+	 var medicalbalance=$("#medicalbalance").val();
 	 var casualbalance=$("#casualbalance").val();
 	 var earnedbalance=$("#earnedbalance").val();
 	 var halfbalance=$("#halfbalance").val();
@@ -93,7 +93,7 @@ $("#update").click(function(){
 	 $.ajax({
 			 url: 'resources/library/editLeaveTable.php',
 			 type: 'POST',
-			 data: {flag: flags, status: presentType, medicalleave: medicalVal, casualleave: casualVal, dutyleave: dutyVal, pin: pin, month: month, casualbalance: casualbalance, medical: medicalbalance, earnedbalance: earnedbalance, halfbalance: halfbalance},
+			 data: {flag: flags, status: presentType, medicalleave: medicalVal, casualleave: casualVal, dutyleave: dutyVal, pin: pin, month: month, casualbalance: casualbalance, medicalbalance: medicalbalance, earnedbalance: earnedbalance, halfbalance: halfbalance},
 			 success: function(data){
 				$("#tmp").html(data);
 			 }
