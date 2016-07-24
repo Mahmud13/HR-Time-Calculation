@@ -77,8 +77,8 @@
 				<td class="outtime"><?php echo $outtime[$day]; ?></td>
 				<td class="workhour"><?php echo  $workhour[$day]; ?></td>
 				<td class="status">
-					<div class="view"><?php echo isset($status[$day]) ? $status[$day] : "-"; ?></div>
-					<div class="edit">
+					<div class="view" name="pt<?php echo $day; ?>"><?php echo isset($status[$day]) ? $status[$day] : "-"; ?></div>
+		<!--			<div class="edit">
 					<select name="pt<?php echo $day;?>">
 							<?php $st = $status[$day]; ?>
 							<option value="absent" <?php if($st=='absent'){echo 'selected="selectd"';}?>>Absent</option>
@@ -94,7 +94,7 @@
 							<Option value="late3" <?php if($st=='late3'){echo 'selected="selectd"';}?>>Late&gt;3</option>
 							<Option value="half12" <?php if($st=='half12'){echo 'selected="selectd"';}?>>Half&gt;12</option>
 						</select> 
-					</div>
+					</div>-->
 				</td>
 				<td class="enjoyedleave"><?php echo (float) $enjoyedleave[$day];?></td>
 				<td class="casualleave">
@@ -153,7 +153,7 @@
 			</td>
 			<td><button type="button" id="edit">Edit</button></td>
 			<td colspan="2">
-			<td><button type="button" form="search" name="action" value="viewLeave" id="update">Update</button></td>
+			<td><button type="submit" form="search" name="action" value="viewLeave" id="update">Update</button></td>
 		</tr>
 	</table>
 	<br><br>

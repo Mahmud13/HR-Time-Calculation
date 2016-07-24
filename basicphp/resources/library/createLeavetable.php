@@ -262,6 +262,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 	if(in_array($present, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
 		if($medicalleave[$day]==0.5 and $medical_leave_balance>=0.5){
 			$medical_leave_balance-=0.5;
+			$status[$day] = 'halfleave';
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
@@ -272,8 +273,10 @@ for($day = "1";$day<=$length_of_month;$day++){
 			}
 		}else if($medicalleave[$day]==1 and $medical_leave_balance>=1){
 			$medical_leave_balance--;
+			$status[$day] = 'leave';
 		}else if($casualleave[$day]==0.5 and $casual_leave_balance>=0.5){
 			$casual_leave_balance-=0.5;
+			$status[$day] = 'halfleave';
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
@@ -284,11 +287,14 @@ for($day = "1";$day<=$length_of_month;$day++){
 			}
 		}else if($casualleave[$day]==1 and $casual_leave_balance>=1){
 			$casual_leave_balance--;
+			$status[$day] = 'leave';
 		}else  if($earned_leave_balance>=1){
 			$enjoyedleave[$day] = 1;
 			$earned_leave_balance--;
 		    $adjusted_earned_leave_balance--;
+			$status[$day] = 'leave';
 		}else if($dutyleave[$day]==0.5){
+			$status[$day] = 'halfleave';
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
@@ -298,10 +304,12 @@ for($day = "1";$day<=$length_of_month;$day++){
 				$leaves_without_pay+=0.5;
 			}
 		}else if($dutyleave[$day]==1){
+			$status[$day] = 'leave';
 		}else  if($earned_leave_balance>=1){
 			$enjoyedleave[$day] = 1;
 			$earned_leave_balance--;
 		    $adjusted_earned_leave_balance--;
+			$status[$day] = 'leave';
 		}else  if($earned_leave_balance<1 and $earned_leave_balance>=0.5){
 			$earned_leave_balance-=0.5;
 			$enjoyedleave[$day] = 0.5;
@@ -310,6 +318,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$earnedleave[$day] = -0.029;
 			$earned_leave_balance-=0.029;
 		    $adjusted_earned_leave_balance-=0.529;
+			$status[$day] = 'halfleave';
 		}else if($earned_leave_balance<0.5){
 			$leavewithoutpay[$day]=1;
 			$earnedleave[$day] = -0.058;
@@ -320,18 +329,19 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$earnedleave[$day]+=0.058;
 		$earned_leave_balance+=0.058;
 	}else if ($present=='half' or $present=='!out-half'){
-		echo 'kake samlabo ';
-		echo $dutyleave[$day];
 		if($medicalleave[$day]==0.5 and $medical_leave_balance>=0.5){
+			$status[$day] = 'halfleave';
 			$medical_leave_balance-=0.5;
 		}else if($casualleave[$day]==0.5 and $casual_leave_balance>=0.5){
 			$casual_leave_balance-=0.5;
+			$status[$day] = 'halfleave';
 		}else if($dutyleave[$day]==0.5){
-		    echo "samlao";
+			$status[$day] = 'halfleave';
 		}else if($earned_leave_balance>=0.5){
 			$enjoyedleave[$day] = 0.5;
 			$earned_leave_balance-=0.5;
 			$adjusted_earned_leave_balance-=0.5;
+			$status[$day] = 'halfleave';
 		}else{
 			$leavewithoutpay[$day]=0.5;
 			$leaves_without_pay+=0.5;

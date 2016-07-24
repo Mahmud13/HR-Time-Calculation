@@ -35,7 +35,7 @@ for($i=1; $i<=$len; $i++){
 	$fl = $flags[$i]=='W' ? 'workday' : 'holiday';
 	$dl = $dutyleave[$i];
 	$dt = $i<10 ? "$year-$monthid-0$i" : "$year-$monthid-$i";
-	if($st=='H'){
+	if($fl=='H'){
 		$ml = 0;
 		$cl = 0;
 		$dl = 0;
@@ -113,8 +113,7 @@ $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);
 $result3 = mysqli_query($link, $sql3);
 $result4 = mysqli_query($link, $sql4);
-echo $sql4;
-if(!$result0 or !$result1 or !$result2 or !$result3){
+if(!$result4 or !$result1 or !$result2 or !$result3){
 	echo  mysqli_error($link);
 }
 if($monthid!=1){
