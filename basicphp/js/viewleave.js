@@ -6,31 +6,31 @@ $(document).ready( function(){
 		$(".edit").hide();
 		$(".datafield").each(function(){
 			var day = parseInt($(this).attr("id").substring(3,5));
-			if ($(this).find(".stat").find(".view").html() == "H"){
+			if ($(this).find(".stat").find(".statusview").html() == "H"){
 			//	$(this).css("background-color","gray");
 			}
-			if ($(this).find(".status").find(".view").html() == "absent"){
+			if ($(this).find(".status").find(".statusview").html() == "absent"){
 			$(this).css("background-color","IndianRed");
 			}
-			if ($(this).find(".status").find(".view").html() == "!out-absent"){
+			if ($(this).find(".status").find(".statusview").html() == "!out-absent"){
 			$(this).css("background-color","IndianRed");
 			}
-			if ($(this).find(".status").find(".view").html() == "late"){
+			if ($(this).find(".status").find(".statusview").html() == "late"){
 			$(this).css("background-color","LightBlue");
 			}
-			if ($(this).find(".status").find(".view").html() == "late3"){
+			if ($(this).find(".status").find(".statusview").html() == "late3"){
 			$(this).css("background-color","LightBlue");
 			}
-			if ($(this).find(".status").find(".view").html() == "half"){
+			if ($(this).find(".status").find(".statusview").html() == "half"){
 			$(this).css("background-color","LightPink");
 			}
-			if ($(this).find(".status").find(".view").html() == "!out-half"){
+			if ($(this).find(".status").find(".statusview").html() == "!out-half"){
 			  $(this).css("background-color","LightPink");
 			}
-			if ($(this).find(".status").find(".view").html() == "half12"){
+			if ($(this).find(".status").find(".statusview").html() == "half12"){
 			  $(this).css("background-color","LightPink");
 			}
-			if ($(this).find(".status").find(".view").html() == "!out-half12"){
+			if ($(this).find(".status").find(".statusview").html() == "!out-half12"){
 			  $(this).css("background-color","LightPink");
 			}
 
