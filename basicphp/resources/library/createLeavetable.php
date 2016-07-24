@@ -141,8 +141,8 @@ if($monthid != 1){
 	if(empty($earned_leave_balance)){
 		$earned_leave_balance = 0;
 	}
-	$medical_leave_balance = 14;
-	$casual_leave_balance = 21;
+	$medical_leave_balance = 21;
+	$casual_leave_balance = 10;
 	$halves = 0;
 	$absents = 0;
 }
