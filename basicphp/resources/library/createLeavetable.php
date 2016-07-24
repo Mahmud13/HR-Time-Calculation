@@ -160,7 +160,6 @@ VALUES ';
 
 for($day = "1";$day<=$length_of_month;$day++){
 	$days[] = $day;
-	$dutyleave[$day] = '0';
 	$date = $day<10 ? "$year-$monthid-0$day" : "$year-$monthid-$day";
 	$dayNames[$day]=date("l",strtotime($date));
 	//If flag of the day is not available from the pristine calendar, assign default flags
@@ -321,11 +320,14 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$earnedleave[$day]+=0.058;
 		$earned_leave_balance+=0.058;
 	}else if ($present=='half' or $present=='!out-half'){
+		echo 'kake samlabo ';
+		echo $dutyleave[$day];
 		if($medicalleave[$day]==0.5 and $medical_leave_balance>=0.5){
 			$medical_leave_balance-=0.5;
 		}else if($casualleave[$day]==0.5 and $casual_leave_balance>=0.5){
 			$casual_leave_balance-=0.5;
 		}else if($dutyleave[$day]==0.5){
+		    echo "samlao";
 		}else if($earned_leave_balance>=0.5){
 			$enjoyedleave[$day] = 0.5;
 			$earned_leave_balance-=0.5;

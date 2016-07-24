@@ -113,7 +113,7 @@ $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);
 $result3 = mysqli_query($link, $sql3);
 $result4 = mysqli_query($link, $sql4);
-
+echo $sql4;
 if(!$result0 or !$result1 or !$result2 or !$result3){
 	echo  mysqli_error($link);
 }
