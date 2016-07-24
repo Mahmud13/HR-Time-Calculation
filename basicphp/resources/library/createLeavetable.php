@@ -342,6 +342,9 @@ for($day = "1";$day<=$length_of_month;$day++){
 	}
 	$balance[$day]="$earned_leave_balance";
 }
+if($adjusted_earned_leave_balance-$prev_earned_leave<1.75){
+	$adjusted_earned_leave_balance-=0.01;
+}
 $earned_leave_balance = $adjusted_earned_leave_balance;
 //Store the month-end balances to the month table
 if($monthid==12 and $earned_leave_balance>60){
