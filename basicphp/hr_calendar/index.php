@@ -31,9 +31,9 @@ do{
 
 foreach($days as $day):
 if(!isset($_POST["flag$day"])){
-echo "Please set the status of all flags";
-include "output.html.php";
-exit();
+	echo "Please set the status of all flags";
+	include "output.html.php";
+	exit();
 }
 endforeach;
 

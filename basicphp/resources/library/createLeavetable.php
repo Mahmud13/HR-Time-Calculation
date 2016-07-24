@@ -84,7 +84,7 @@ while ($row = mysqli_fetch_array($result)){
 	$today = intval(substr($row['date'],-2));
 	$flags[$today] = $row['flag'];
 }
-if(is_null($flags[2])){
+if(isset($flags)){
 	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
 	$result = mysqli_query($link, $sql);
 	while ($row = mysqli_fetch_array($result)){
@@ -155,6 +155,9 @@ $lates = 0;
 $leaves_without_pay = '0'; 
 $total_work_hour = date(strtotime('0'));
 //Evaluate the parameters of each day of the month
+$sql = 'INSERT IGNORE INTO RawTimeTable (`pin`, `date`, `inTime`, `outTime`, `status`, `medicalleave`, `casualleave`, `enjoyedleave`, `earnedleave`, `dutyleave`, `leavewithoutpay`)
+VALUES ';
+
 for($day = "1";$day<=$length_of_month;$day++){
 	$days[] = $day;
 	$dutyleave[$day] = '0';
@@ -341,7 +344,11 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$earned_leave_balance += 0.058;
 	}
 	$balance[$day]="$earned_leave_balance";
+	$dt = "$year-$monthid-$day";
+	$sql .= "($staffpin, '" . $dt . "', '-00:00:01', '-00:00:01', NULL, '0', '0', '0', '0', '0', '0'),";
 }
+$sql = rtrim($sql, ',') . ';';
+$result = mysqli_query($link, $sql);
 if($adjusted_earned_leave_balance-$prev_earned_leave<1.75){
 	$adjusted_earned_leave_balance-=0.01;
 }

@@ -41,7 +41,6 @@ for($i=1; $i<=$len; $i++){
 		$dl = 0;
 	}
 	if(in_array($st, array('half', '!out-half'))){
-	  	echo $ml;
 		if($ml==1){
 			$ml = 0.5;
 			$cl = 0;
@@ -57,7 +56,7 @@ for($i=1; $i<=$len; $i++){
 		}else if($cl == 0.5){
 			$ml = 0;
 			$dl = 0;
-		}
+		}	
 		if($dl==1){
 			$dl = 0.5;
 			$ml = 0;
@@ -66,8 +65,7 @@ for($i=1; $i<=$len; $i++){
 			$ml = 0;
 			$cl = 0;
 		}
-	}
-	if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
+	}else if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
 		if($ml==1){
 			$cl = 0;
 			$dl = 0;
@@ -103,16 +101,19 @@ for($i=1; $i<=$len; $i++){
 	$sql3.= 'WHEN "'. $dt. '" THEN "'. $fl. '" ';
 	$sql4.= 'WHEN "'. $dt. '" THEN "'. $dl. '" ';
 }
+
 $sql0.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql1.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '"; '; 
 $sql2.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $sql4.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
+
 $result0 = mysqli_query($link, $sql0);
 $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);
 $result3 = mysqli_query($link, $sql3);
 $result4 = mysqli_query($link, $sql4);
+
 if(!$result0 or !$result1 or !$result2 or !$result3){
 	echo  mysqli_error($link);
 }
@@ -126,4 +127,3 @@ if($monthid!=1){
 	mysqli_query($link, $sql);
 }
 ?>
-

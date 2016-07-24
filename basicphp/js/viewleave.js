@@ -31,6 +31,7 @@ $(document).ready( function(){
 			  $(this).css("background-color","LightPink");
 			}
 			
+			
 		//	var day = parseInt($(this).attr("id").substring(3,5));
 		//	if ($(this).find(".stat").find(".noview").html() == "H"){
 		//	//	$(this).css("background-color","gray");
@@ -87,7 +88,6 @@ $("#update").click(function(){
 			flags[day] = $(this).find("input[name='fl"+day+"']:checked").val();
 			presentType[day] = $(this).find("select[name='pt"+day+"'] option:selected").val();
 			medicalVal[day] = $(this).find("input[name='ml"+day+"']:checked").val();
-			alert(medicalVal[day]);
 			casualVal[day] = $(this).find("input[name='cl"+day+"']:checked").val();
 			dutyVal[day] = $(this).find("input[name='dl"+day+"']:checked").val();
 	 });
