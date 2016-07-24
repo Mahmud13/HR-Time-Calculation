@@ -77,7 +77,7 @@
 				<td class="outtime"><?php echo $outtime[$day]; ?></td>
 				<td class="workhour"><?php echo  $workhour[$day]; ?></td>
 				<td class="status">
-					<div class="view" name="pt<?php echo $day; ?>"><?php echo isset($status[$day]) ? $status[$day] : "-"; ?></div>
+					<div class="statusview" name="pt<?php echo $day; ?>"><?php echo isset($status[$day]) ? $status[$day] : "-"; ?></div>
 		<!--			<div class="edit">
 					<select name="pt<?php echo $day;?>">
 							<?php $st = $status[$day]; ?>
