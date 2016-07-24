@@ -90,7 +90,7 @@ $("#update").click(function(){
 	 $(".datafield").each(function(){
 			var day = parseInt($(this).attr("id").substring(3,5));
 			flags[day] = $(this).find("input[name='fl"+day+"']:checked").val();
-			presentType[day] = $(this).find("select[name='pt"+day+"'] option:selected").val();
+			presentType[day] = $(this).find("div[name='pt"+day+"']").html();
 			medicalVal[day] = $(this).find("input[name='ml"+day+"']:checked").val();
 			casualVal[day] = $(this).find("input[name='cl"+day+"']:checked").val();
 			dutyVal[day] = $(this).find("input[name='dl"+day+"']:checked").val();
