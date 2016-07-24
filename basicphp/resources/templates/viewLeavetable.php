@@ -87,6 +87,7 @@
 							<Option value="late" <?php if($st=='late'){echo 'selected="selectd"';}?>>Late</option>
 							<Option value="!out-full" <?php if($st=='!out-full'){echo 'selected="selectd"';}?>>!out-full</option>
 							<Option value="!out-half" <?php if($st=='!out-half'){echo 'selected="selectd"';}?>>!out-half</option>
+							<Option value="!out-half12" <?php if($st=='!out-half12'){echo 'selected="selectd"';}?>>!out-half&gt;12</option>
 							<Option value="!out-late" <?php if($st=='!out-late'){echo 'selected="selectd"';}?>>!out-late</option>
 							<Option value="aholiday" <?php if($st=='aholiday'){echo 'selected="selectd"';}?>>A.Holiday</option> 
 							<Option value="pholiday" <?php if($st=='pholiday'){echo 'selected="selectd"';}?>>P.Holiday</option>

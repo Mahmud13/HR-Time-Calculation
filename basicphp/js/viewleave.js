@@ -30,6 +30,10 @@ $(document).ready( function(){
 			if ($(this).find(".status").find(".view").html() == "half12"){
 			  $(this).css("background-color","LightPink");
 			}
+			if ($(this).find(".status").find(".view").html() == "!out-half12"){
+			  $(this).css("background-color","LightPink");
+			}
+
 			
 			
 		//	var day = parseInt($(this).attr("id").substring(3,5));
