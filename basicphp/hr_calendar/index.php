@@ -46,7 +46,7 @@ $ns = isset($_POST["note$day"]) ? $_POST["note$day"] : "";
 			epochdate = "'.strtotime("$year-$month-$day").'",
 			date = "'.$year.'-'.$month.'-'.$day.'",
 			flag = "'.$ds.'",
-			map = "'.$ms.'"
+			map = "'.$ms.'",
 			note = "'.$ns.'"';
 
 	if (!mysqli_query($link, $sql)){

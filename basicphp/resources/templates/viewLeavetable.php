@@ -133,7 +133,7 @@
 			<td class="stat"></td>
 			<td class="intime" id="intime" value="10:55"></td>
 			<td class="outtime" id="outtime" value=<?php echo $intime[$day]; ?>></td>
-			<td class="workhour"><?php echo floor($total_work_hour/3600).'h '. floor(($total_work_hour % 3600)/60). ' m';?></td>
+			<td class="workhour"><?php echo floor($total_work_hour/3600).' h '. floor(($total_work_hour % 3600)/60). ' m';?></td>
 			<td class="status"></td>
 			<td class="earnedleave"></td>
 			<td class="casualleave"></td>
