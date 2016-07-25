@@ -107,7 +107,6 @@ $sql1.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "
 $sql2.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $sql3.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
 $sql4.= 'END WHERE `pin`="'.$pin.'" AND `date` BETWEEN "'. $startdate . '" AND "' . $enddate . '";'; 
-echo $sql4;
 $result0 = mysqli_query($link, $sql0);
 $result1 = mysqli_query($link, $sql1);
 $result2 = mysqli_query($link, $sql2);

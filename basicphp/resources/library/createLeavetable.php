@@ -239,6 +239,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$entrytime_epoch = strtotime("09:15:00");
 		$latetime_epoch = strtotime("09:30:00");
 		$leavetime_epoch = strtotime("13:30:00");
+		
 		if($intime_epoch>$latetime_epoch or $outtime_epoch<$leavetime_epoch){
 			$present = "half";
 			if($halves>=12){
@@ -254,6 +255,9 @@ for($day = "1";$day<=$length_of_month;$day++){
 			}
 		}else{
 			$present = 'full';
+		}
+		if($outtime_epoch-$entrytime_epoch<14400){
+			$present = 'absent';
 		}
 	}
 	// take either auto-determined value or the manually set value
