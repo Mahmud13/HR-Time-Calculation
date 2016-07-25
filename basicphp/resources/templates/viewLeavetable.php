@@ -149,11 +149,11 @@
 				<button type="submit" value="viewLeave" id="resetcalendar" form="search" name="action">Reset Calendar</button>
 			</td>
 			<td>	
-				<button type="submit" value="viewLeave" id="reset" form="search" name="action">Reset</button>
+				<button type="submit" value="viewLeave" id="reset" form="search" name="action">Refresh</button>
 			</td>
 			<td><button type="button" id="edit">Edit</button></td>
 			<td colspan="2">
-			<td><button type="submit" form="search" name="action" value="viewLeave" id="update">Update</button></td>
+			<td><button type="button" form="search" name="action" value="viewLeave" id="update">Update</button></td>
 		</tr>
 	</table>
 	<br><br>
