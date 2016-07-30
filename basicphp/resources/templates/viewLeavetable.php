@@ -25,7 +25,7 @@
 
 		<tr>
 			<th colspan="5" style="border-left: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
-			<td><?php if($monthid == 1){echo 'December '. $prevyear;}else{echo date('F Y', strtotime("$year-$prevmonth-01"));}?></td>
+			<td><?php echo date('F Y', strtotime($prevmonth));?></td>
 			<td>
 				<div  class="view"><?php echo $prev_medical_leave; ?></div>
 				<div class = "edit"><input id="medicalbalance" type="number" value=<?php echo $prev_medical_leave;?> style="width:70px"></div>
@@ -135,25 +135,60 @@
 			<td class="outtime" id="outtime" value=<?php echo $intime[$day]; ?>></td>
 			<td class="workhour"><?php echo floor($total_work_hour/3600).' h '. floor(($total_work_hour % 3600)/60). ' m';?></td>
 			<td class="status"></td>
-			<td class="earnedleave"></td>
-			<td class="casualleave"></td>
-			<td class="medicalleave"></td>
-			<td class="enjoyedleave"></td>
-			<td class="dutyleave"></td>
+			<td class="enjoyedleave"><?php echo array_sum($enjoyedleave); ?></td>
+			<td class="casualleave"><?php echo $prev_casual_leave-$casual_leave_balance; ?></td>
+			<td class="medicalleave"><?php echo $prev_medical_leave-$medical_leave_balance; ?></td>
+			<td class="dutyleave"><?php echo array_sum($dutyleave); ?></td>
+			<td class="earnedleave"><?php echo array_sum($earnedleave);?></td>
 			<td class="leavewithoutpay"><?php echo $leaves_without_pay;?></td>
 			<td class="balanceleft"><?php echo round($earned_leave_balance,3); ?></td>
 		</tr>
+		<tr>
+			<td colspan="5" style="border: 1px solid transparent"></td>
+			<td colspan="5"style="border-right: 1px solid transparent"></td>
+			<td colspan="4" style="border: 1px solid transparent"></td>
+		</tr>
+		<tr>
+			<th colspan="5" style="border-left: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+			<th>Month</th>
+			<th>Medical Leave</th>
+			<th>Casual Leave</th>
+			<th>Earned Leave</th>
+			<th>Halves</th>
+			<th colspan="4"style="border-right: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+		</tr>
+
+		<tr>
+			<th colspan="5" style="border-left: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+			<td><?php echo date('F Y', strtotime("$year-$monthid-01"));?></td>
+			<td>
+				<div ><?php echo $medical_leave_balance; ?></div>
+			</td>
+		    <td>
+				<div ><?php echo $casual_leave_balance; ?></div>
+			</td>
+		    <td>
+				<div ><?php echo $earned_leave_balance; ?></div>
+			</td>
+			<td>
+				<div ><?php echo $halves; ?></div>
+			</td>
+			<th colspan="4" style="border-right: 1px solid transparent; border-top: 1px solid transparent; border-bottom: 1px solid transparent"></th>
+		</tr>	
 		<tr class="buttonrow">
 			<td colspan="2"></td>
 			<td>	
-				<button type="submit" value="viewLeave" id="resetcalendar" form="search" name="action">Reset Calendar</button>
+				<button type="submit" value="viewLeave" id="resetcalendar" form="search" name="action">Load Pristine Calendar</button>
 			</td>
+		    <td colspan="2"> </td>
+<!--
 			<td>	
 				<button type="submit" value="viewLeave" id="reset" form="search" name="action">Refresh</button>
 			</td>
+-->
 			<td><button type="button" id="edit">Edit</button></td>
-			<td colspan="2">
-			<td><button type="submit" form="search" name="action" value="viewLeave" id="update">Update</button></td>
+			<td colspan="3">
+			<td><button type="button" form="search" name="action" value="viewLeave" id="update">Update</button></td>
 		</tr>
 	</table>
 	<br><br>

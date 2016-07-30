@@ -35,66 +35,54 @@ for($i=1; $i<=$len; $i++){
 	$fl = $flags[$i]=='W' ? 'workday' : 'holiday';
 	$dl = $dutyleave[$i];
 	$dt = $i<10 ? "$year-$monthid-0$i" : "$year-$monthid-$i";
-	// if($fl=='H'){
-		// $ml = 0;
-		// $cl = 0;
-		// $dl = 0;
-	// }
-	// if(in_array($st, array('half', '!out-half'))){
-		// if($ml==1){
-			// $ml = 0.5;
-			// $cl = 0;
-			// $dl = 0;
-		// }else if($ml == 0.5){
-			// $cl = 0;
-			// $dl = 0;
-		// }
-		// if($cl==1){
-			// $cl = 0.5;
-			// $ml = 0;
-			// $dl = 0;
-		// }else if($cl == 0.5){
-			// $ml = 0;
-			// $dl = 0;
-		// }	
-		// if($dl==1){
-			// $dl = 0.5;
-			// $ml = 0;
-			// $cl = 0;
-		// }else if($dl==0.5){
-			// $ml = 0;
-			// $cl = 0;
-		// }
-	// }else if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
-		// if($ml==1){
-			// $cl = 0;
-			// $dl = 0;
-		// }else if($ml == 0.5){
-			// $ml = 0;
-			// $cl = 0;
-			// $dl = 0;
-		// }
-		// if($cl==1){
-			// $ml = 0;
-			// $dl = 0;
-		// }else if($cl == 0.5){
-			// $cl = 0;
-			// $ml = 0;
-			// $dl = 0;
-		// }
-		// if($dl==1){
-			// $ml = 0;
-			// $cl = 0;
-		// }else if($dl==0.5){
-			// $dl = 0;
-			// $ml = 0;
-			// $cl = 0;
-		// }
-	// }else{
-		// $dl = 0;
-		// $ml = 0;
-		// $cl = 0;
-	// }
+	if($fl=='H'){
+		 $ml = 0;
+		 $cl = 0;
+		 $dl = 0;
+	 }
+    if(in_array($st, array('half', '!out-half'))){
+  		 if($ml==1){
+  			 $ml = 0.5;
+  			 $cl = 0;
+  			 $dl = 0;
+  		 }else if($ml == 0.5){
+  			 $cl = 0;
+  			 $dl = 0;
+  		 }
+  		 if($cl==1){
+  			 $cl = 0.5;
+  			 $ml = 0;
+  			 $dl = 0;
+  		 }else if($cl == 0.5){
+  			 $ml = 0;
+  			 $dl = 0;
+  		 }	
+  		 if($dl==1){
+  			 $dl = 0.5;
+  			 $ml = 0;
+  			 $cl = 0;
+  		 }else if($dl==0.5){
+  			 $ml = 0;
+  			 $cl = 0;
+  		 }
+  	 }else if(in_array($st, array('absent', 'half12', 'late3','!out-half12','!out-late3'))){
+		 if($ml>0){
+			 $cl = 0;
+			 $dl = 0;
+		 }
+		 if($cl>0){
+			 $ml = 0;
+			 $dl = 0;
+		 }
+		 if($dl>0){
+			 $ml = 0;
+			 $cl = 0;
+		 }
+    }else if($st=='full'){
+		 $dl = 0;
+		 $ml = 0;
+		 $cl = 0;
+	}
 	$sql0.= 'WHEN "'. $dt. '" THEN "'. $st. '" ';
 	$sql1.= 'WHEN "'. $dt. '" THEN "'. $ml. '" ';
 	$sql2.= 'WHEN "'. $dt. '" THEN "'. $cl. '" ';
@@ -115,13 +103,12 @@ $result4 = mysqli_query($link, $sql4);
 if(!$result4 or !$result1 or !$result2 or !$result3){
 	echo  mysqli_error($link);
 }
-if($monthid!=1){
-	$prevmonth = $monthid-1;
-	$sql = 'Update RawMonthTable SET halves = "' . $halfbalance . '", medicalLeave= "'. $medicalbalance . '" , casualLeave= "'. $casualbalance . '", earnedLeave= "'. $earnedbalance . '" WHERE pin = "' . $pin . '" AND month = "' . $year . '-' . $prevmonth . '-00"';
-	mysqli_query($link, $sql);
+if($monthid != 1){
+		$prevmonth = $monthid<10 ? $year . '-0' . ($monthid-1) . '-01' : $year . '-' . ($monthid-1) . '-01';
 }else{
-	$prevyear = $year-1;
-	$sql = 'Update RawYearTable SET earnedleavebalance= "'. $earnedbalance . '" WHERE pin = "' . $pin . '" AND year = "' . $prevyear . '-00-00"';
-	mysqli_query($link, $sql);
+		$prevmonth = $year-1 . '-12-01';
 }
+$sql = 'INSERT INTO RawMonthTable(pin, month, halves, medicalLeave, casualLeave, earnedLeave) VALUES("' . $pin . '", "'. $prevmonth . '", "'. $halfbalance . '", "'. $medicalbalance . '", "' . $casualbalance . '", "' . $earnedbalance . '") ON DUPLICATE KEY UPDATE halves = "' . $halfbalance . '", medicalLeave= "'. $medicalbalance . '" , casualLeave= "'. $casualbalance . '", earnedLeave= "'. $earnedbalance . '";';
+mysqli_query($link, $sql);
+echo $sql;
 ?>

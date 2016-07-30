@@ -84,7 +84,7 @@ while ($row = mysqli_fetch_array($result)){
 	$today = intval(substr($row['date'],-2));
 	$flags[$today] = $row['flag'];
 }
-if(isset($flags)){
+if(!isset($flags)){
 	$sql = 'SELECT `flag`, `date` FROM calendar WHERE `date`>="'.$startdate.'" AND `date`<="'.$enddate.'"';
 	$result = mysqli_query($link, $sql);
 	while ($row = mysqli_fetch_array($result)){
@@ -95,55 +95,37 @@ if(isset($flags)){
 
 //Get the balance of the previous month if the month is not January
 if($monthid != 1){
-	$prevmonth = $monthid-1;
-	$sql =  'SELECT * FROM RawMonthTable WHERE `pin`="'.$staffpin.'" AND YEAR(`month`)="'.$year.'" AND MONTH(`month`)="'.$prevmonth.'"';
-	$result = mysqli_query($link, $sql);
-	if(!$result){
-		$error = "Error getting month".mysqli_error($link);
-		include 'error.html.php';
-		exit();
-	}
-	if($row = mysqli_fetch_array($result)){
-		$earned_leave_balance=$row['earnedLeave'];
-		$medical_leave_balance=$row['medicalLeave'];
-		$casual_leave_balance=$row['casualLeave'];
-		$halves = $row['halves'];
-		$absents = $row['absents'];
-	}
-	if(empty($earned_leave_balance)){
-		$earned_leave_balance= '0';
-	}
-	if(empty($medical_leave_balance)){
-		$medical_leave_balance= '0';
-	}
-	if(empty($casual_leave_balance)){
-		$casual_leave_balance= '0';
-	}
-	if(empty($halves)){
-		$halves = 0;
-	}
-	if(empty($absents)){
-		$absents = 0;
-	}
+		$prevmonth = $monthid<10 ? $year . '-0' . ($monthid-1) . '-01' : $year . '-' . ($monthid-1) . '-01' ;
 }else{
-	//If the month is January get the earned leave balance from December of the previous year
-	$prevyear = $year-1;
-	$sql = "SELECT `earnedleavebalance` FROM RawYearTable WHERE pin=$staffpin AND YEAR(`year`)=$prevyear";
-	$result = mysqli_query($link, $sql);
-	if(!$result){
-		$error = "unable to get year balance" . mysqli_error($link);
-		include 'error.html.php';
-		exit();
-	}
-	if($row=mysqli_fetch_array($result)){
-		$earned_leave_balance = $row['earnedleavebalance'];
-	}
-	if(empty($earned_leave_balance)){
-		$earned_leave_balance = 0;
-	}
-	$medical_leave_balance = 21;
-	$casual_leave_balance = 10;
+		$prevmonth = ($year-1) . '-12-01';
+}
+$sql =  'SELECT * FROM RawMonthTable WHERE `pin`="'.$staffpin.'" AND `month`="'.$prevmonth.'";';
+$result = mysqli_query($link, $sql);
+if(!$result){
+	$error = "Error getting month".mysqli_error($link);
+	include 'error.html.php';
+	exit();
+}
+if($row = mysqli_fetch_array($result)){
+	$earned_leave_balance=$row['earnedLeave'];
+	$medical_leave_balance=$row['medicalLeave'];
+	$casual_leave_balance=$row['casualLeave'];
+	$halves = $row['halves'];
+	$absents = $row['absents'];
+}
+if(empty($earned_leave_balance)){
+	$earned_leave_balance= '0';
+}
+if(empty($medical_leave_balance)){
+	$medical_leave_balance= '0';
+}
+if(empty($casual_leave_balance)){
+	$casual_leave_balance= '0';
+}
+if(empty($halves)){
 	$halves = 0;
+}
+if(empty($absents)){
 	$absents = 0;
 }
 $prev_earned_leave = $earned_leave_balance;
@@ -186,7 +168,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 	}
 	//If both inTime and outTime is available, determine the workhour
 	if($intime[$day]!="-" and $outtime[$day] != "-"){
-		$workhour[$day] = date("G \h i \m", strtotime($outtime[$day])-strtotime($intime[$day]));
+		$workhour[$day] = date("G \h i \m", strtotime($outtime[$day])-strtotime($intime[$day])-3600);
 		$total_work_hour = date($total_work_hour+strtotime($outtime[$day])-strtotime($intime[$day])); 
 	}else{		
 		$workhour[$day] = "-";
@@ -239,8 +221,9 @@ for($day = "1";$day<=$length_of_month;$day++){
 		$entrytime_epoch = strtotime("09:15:00");
 		$latetime_epoch = strtotime("09:30:00");
 		$leavetime_epoch = strtotime("13:30:00");
-		
-		if($intime_epoch>$latetime_epoch or $outtime_epoch<$leavetime_epoch){
+		if($outtime_epoch-$intime_epoch<14400){
+			$present = "absent";		
+		}else if($intime_epoch>$latetime_epoch or $outtime_epoch<$leavetime_epoch){
 			$present = "half";
 			if($halves>=12){
 				$present = "half12";
@@ -295,16 +278,13 @@ for($day = "1";$day<=$length_of_month;$day++){
 		}else if($casualleave[$day]==1 and $casual_leave_balance>=1){
 			$casual_leave_balance--;
 			$status[$day] = 'leave';
-		}else  if($earned_leave_balance>=1){
-			$enjoyedleave[$day] = 1;
-			$earned_leave_balance--;
-		    $adjusted_earned_leave_balance--;
 		}else if($dutyleave[$day]==0.5){
 			$status[$day] = 'halfleave';
 			if($earned_leave_balance>=0.5){
 				$enjoyedleave[$day] = 0.5;
 				$earned_leave_balance-=0.5;
 				$adjusted_earned_leave_balance-=0.5;
+				$status[$day] = "leave";
 			}else{
 				$leavewithoutpay[$day] = 0.5;
 				$leaves_without_pay+=0.5;
@@ -315,6 +295,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$enjoyedleave[$day] = 1;
 			$earned_leave_balance--;
 		    $adjusted_earned_leave_balance--;
+			$status[$day] = "leave";
 		}else  if($earned_leave_balance<1 and $earned_leave_balance>=0.5){
 			$earned_leave_balance-=0.5;
 			$enjoyedleave[$day] = 0.5;
@@ -323,6 +304,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$earnedleave[$day] = -0.029;
 			$earned_leave_balance-=0.029;
 		    $adjusted_earned_leave_balance-=0.529;
+			$status[$day] = "halfleave";
 		}else if($earned_leave_balance<0.5){
 			$leavewithoutpay[$day]=1;
 			$earnedleave[$day] = -0.058;
@@ -348,6 +330,7 @@ for($day = "1";$day<=$length_of_month;$day++){
 			$enjoyedleave[$day] = 0.5;
 			$earned_leave_balance-=0.5;
 			$adjusted_earned_leave_balance-=0.5;
+			$status[$day] = 'halfleave';
 		}else{
 			$leavewithoutpay[$day]=0.5;
 			$leaves_without_pay+=0.5;
@@ -375,26 +358,7 @@ $earned_leave_balance = $adjusted_earned_leave_balance;
 if($monthid==12 and $earned_leave_balance>60){
 	$earned_leave_balance = 60;
 }
-$sql = 'SELECT `pin` FROM RawMonthTable WHERE `pin`="'.$staffpin.'" AND `month`="'.$year.'-'.$monthid.'-00"';
-$result = mysqli_query($link, $sql);
-if(!$result){
-	$error = "Cannot connect to month". mysqli_error($link);
-	include 'error.html.php';
-	exit();
-}
-$row = mysqli_fetch_array($result);
-if(empty($row)){
-	$sql = 'INSERT INTO RawMonthTable(pin, month, lates, halves, absents, casualLeave, medicalLeave, earnedLeave, leaveswithoutpay)
-				VALUES("'.$staffpin.'","'.$year.'-'.$monthid.'-00","'.$lates.'","'.$halves.'","'.$absents.'","'.$casual_leave_balance.'","'.$medical_leave_balance.'","'.$earned_leave_balance.'","'.$leaves_without_pay.'")';
-}else{
-	$mn = "$year-$monthid-00";
-	$sql = 'UPDATE RawMonthTable
-			SET 
-			`lates`="' . $lates . '", `halves`="' . $halves . '", `absents` = "' . $absents . '",
-			`casualLeave` = "' . $casual_leave_balance . '", `medicalLeave`= "' . $medical_leave_balance . '",
-			`earnedLeave` = "' . $earned_leave_balance . '", `leaveswithoutpay`= "' . $leaves_without_pay . '"
-			WHERE `pin`= "' . $staffpin . '" AND `month`="'. $mn . '"';
-}
+$sql = 'INSERT INTO RawMonthTable(pin, month, halves, medicalLeave, casualLeave, earnedLeave) VALUES("' . $staffpin . '", "'. $year . '-' . $monthid . '-01", "'. $halves . '", "'. $medical_leave_balance . '", "' . $casual_leave_balance . '", "' . $earned_leave_balance . '") ON DUPLICATE KEY UPDATE halves = "' . $halves . '", medicalLeave= "'. $medical_leave_balance . '" , casualLeave= "'. $casual_leave_balance . '", earnedLeave= "'. $earned_leave_balance . '";';
 $result = mysqli_query($link, $sql);
 if(!$result){
 	$error ="cannot store value. ". mysqli_error($link);
